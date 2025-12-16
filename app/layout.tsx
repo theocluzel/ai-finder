@@ -1,0 +1,23 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "AI Finder - Trouvez l'IA idéale pour vos besoins",
+  description: "Décrivez votre besoin, nous vous suggérons les meilleurs outils d'IA adaptés.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="fr">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+
