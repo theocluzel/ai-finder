@@ -165,9 +165,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                     {results.length} {results.length > 1 ? t.suggestionsPlural : t.suggestions} {results.length > 1 ? t.possiblePlural : t.possible} :
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-                    {results
-                      .filter(result => getToolLogoUrl(result)) // Filtrer les outils sans logo
-                      .map((result, index) => {
+                    {results.map((result, index) => {
                   const optimizedPrompt = isSearchMode 
                     ? generateOptimizedPrompt(searchResults || "", result.category, result.name, language)
                     : generatedPrompts[index] || null;
@@ -182,26 +180,24 @@ export default function Hero({ selectedCategory }: HeroProps) {
                     >
                       {/* Logo et en-tête */}
                       <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        {getToolLogoUrl(result) && (
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.2 }}
-                            className="flex-shrink-0"
-                          >
-                            <LogoImage
-                              src={getToolLogoUrl(result)!}
-                              alt={result.name}
-                              size="sm"
-                              className="sm:hidden"
-                            />
-                            <LogoImage
-                              src={getToolLogoUrl(result)!}
-                              alt={result.name}
-                              size="md"
-                              className="hidden sm:block"
-                            />
-                          </motion.div>
-                        )}
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.2 }}
+                          className="flex-shrink-0"
+                        >
+                          <LogoImage
+                            src={getToolLogoUrl(result)}
+                            alt={result.name}
+                            size="sm"
+                            className="sm:hidden"
+                          />
+                          <LogoImage
+                            src={getToolLogoUrl(result)}
+                            alt={result.name}
+                            size="md"
+                            className="hidden sm:block"
+                          />
+                        </motion.div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2 leading-snug">
                             {result.name}
