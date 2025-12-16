@@ -3,21 +3,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
-
-const typingPhrases = [
-  "Je souhaite finir un exercice de maths à partir d'une photo",
-  "Je souhaite transformer un article en vidéo",
-  "Je souhaite générer des images pour mon e-commerce",
-  "Je souhaite corriger mon CV automatiquement",
-  "Je souhaite créer une voix-off pour ma vidéo",
-  "Je souhaite traduire un document en plusieurs langues",
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AnimatedSearchBar({
   onSearch,
 }: {
   onSearch: (query: string) => void;
 }) {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [typingText, setTypingText] = useState("");
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -25,7 +18,7 @@ export default function AnimatedSearchBar({
   const [typingSpeed, setTypingSpeed] = useState(100);
 
   useEffect(() => {
-    const currentPhrase = typingPhrases[currentPhraseIndex];
+    const currentPhrase = t.typingPhrases[currentPhraseIndex];
     
     const handleTyping = () => {
       if (!isDeleting) {
@@ -42,7 +35,7 @@ export default function AnimatedSearchBar({
           setTypingSpeed(50);
         } else {
           setIsDeleting(false);
-          setCurrentPhraseIndex((prev) => (prev + 1) % typingPhrases.length);
+          setCurrentPhraseIndex((prev) => (prev + 1) % t.typingPhrases.length);
           setTypingSpeed(100);
         }
       }
@@ -50,7 +43,7 @@ export default function AnimatedSearchBar({
 
     const timer = setTimeout(handleTyping, typingSpeed);
     return () => clearTimeout(timer);
-  }, [typingText, isDeleting, currentPhraseIndex, typingSpeed]);
+  }, [typingText, isDeleting, currentPhraseIndex, typingSpeed, t.typingPhrases]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,8 +100,8 @@ export default function AnimatedSearchBar({
             className="w-full sm:w-auto shrink-0 rounded-xl px-4 py-2.5 sm:py-3 md:px-6 md:py-4 font-semibold text-sm md:text-base text-white bg-gradient-to-r from-purple-500 to-pink-500 transition-transform duration-200 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 flex items-center justify-center gap-2"
           >
             <Search className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="hidden sm:inline">Trouver une IA</span>
-            <span className="sm:hidden">Rechercher</span>
+            <span className="hidden sm:inline">{t.searchButton}</span>
+            <span className="sm:hidden">{t.searchButtonMobile}</span>
           </motion.button>
         </div>
       </form>

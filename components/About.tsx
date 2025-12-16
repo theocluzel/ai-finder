@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { X, Sparkles, FileText, Lightbulb, CheckCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AboutProps {
   isOpen: boolean;
@@ -11,7 +12,9 @@ interface AboutProps {
 }
 
 export default function About({ isOpen, onClose }: AboutProps) {
+  const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<"intro" | "framework" | "examples">("intro");
+  
   
   if (!isOpen) return null;
 
@@ -37,7 +40,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Comment bien prompter ?
+            {t.aboutTitle}
           </h2>
           <motion.button
             onClick={onClose}
@@ -59,7 +62,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
                 : "glass text-gray-300 hover:bg-white/10"
             }`}
           >
-            Introduction
+            {t.intro || "Introduction"}
           </button>
           <button
             onClick={() => setActiveSection("framework")}
@@ -79,7 +82,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
                 : "glass text-gray-300 hover:bg-white/10"
             }`}
           >
-            Exemples
+            {t.examples}
           </button>
         </div>
 
@@ -94,20 +97,17 @@ export default function About({ isOpen, onClose }: AboutProps) {
               <div className="flex items-start gap-4">
                 <Sparkles className="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Pourquoi bien prompter ?</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">{t.whyPrompt}</h3>
                   <p className="text-gray-300 leading-relaxed">
-                    Un prompt efficace est la clé pour obtenir des résultats de qualité avec l&apos;IA. 
-                    Les frameworks de prompts aident à obtenir des réponses plus claires, pertinentes 
-                    et adaptées à vos besoins spécifiques.
+                    {t.whyPromptText}
                   </p>
                 </div>
               </div>
               
               <div className="glass rounded-2xl p-4">
                 <p className="text-gray-300 leading-relaxed">
-                  <strong className="text-white">Un prompt efficace</strong> se base sur un framework simple 
-                  qui structure votre demande en trois éléments clés : la <strong className="text-purple-400">Tâche</strong>, 
-                  le <strong className="text-purple-400">Contexte</strong>, et les <strong className="text-purple-400">Références</strong>.
+                  <strong className="text-white">{t.effectivePrompt}</strong> {t.effectivePromptText} <strong className="text-purple-400">{t.task}</strong>, 
+                  le <strong className="text-purple-400">{t.context}</strong>, et les <strong className="text-purple-400">{t.references}</strong>.
                 </p>
               </div>
             </motion.div>
@@ -122,45 +122,42 @@ export default function About({ isOpen, onClose }: AboutProps) {
               <div>
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <FileText className="w-6 h-6 text-purple-400" />
-                  Créer la pétition
+                  {t.createPetition}
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="glass rounded-2xl p-4">
-                    <h4 className="text-lg font-bold text-purple-400 mb-2">1. Tâche</h4>
+                    <h4 className="text-lg font-bold text-purple-400 mb-2">1. {t.task}</h4>
                     <p className="text-gray-300 mb-2">
-                      Indiquez clairement la tâche, incluant un profil et le format que vous préférez.
+                      {t.taskDesc}
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : &quot;En tant que designer graphique, crée un logo moderne pour une startup tech. 
-                        Format vectoriel, style minimaliste.&quot;
+                        {t.taskExample}
                       </p>
                     </div>
                   </div>
 
                   <div className="glass rounded-2xl p-4">
-                    <h4 className="text-lg font-bold text-purple-400 mb-2">2. Contexte</h4>
+                    <h4 className="text-lg font-bold text-purple-400 mb-2">2. {t.context}</h4>
                     <p className="text-gray-300 mb-2">
-                      Ajoutez les détails nécessaires pour que l&apos;IA comprenne précisément ce que vous cherchez.
+                      {t.contextDesc}
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : &quot;Le logo doit être reconnaissable à petite taille, fonctionner en noir et blanc, 
-                        et refléter l&apos;innovation technologique.&quot;
+                        {t.contextExample}
                       </p>
                     </div>
                   </div>
 
                   <div className="glass rounded-2xl p-4">
-                    <h4 className="text-lg font-bold text-purple-400 mb-2">3. Références</h4>
+                    <h4 className="text-lg font-bold text-purple-400 mb-2">3. {t.references}</h4>
                     <p className="text-gray-300 mb-2">
-                      Incluez des références ou exemples pour que les réponses soient plus pertinentes et personnalisées.
+                      {t.referencesDesc}
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : &quot;Inspire-toi des logos de marques tech modernes : Apple, Google, Airbnb. 
-                        Style épuré, couleurs limitées.&quot;
+                        {t.referencesExample}
                       </p>
                     </div>
                   </div>
@@ -170,30 +167,30 @@ export default function About({ isOpen, onClose }: AboutProps) {
               <div className="border-t border-white/10 pt-6">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <CheckCircle className="w-6 h-6 text-green-400" />
-                  Réviser la réponse
+                  {t.reviewResponse}
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="glass rounded-2xl p-4">
-                    <h4 className="text-lg font-bold text-green-400 mb-2">Évaluation</h4>
+                    <h4 className="text-lg font-bold text-green-400 mb-2">{t.evaluation}</h4>
                     <p className="text-gray-300 mb-2">
-                      Évaluez si la réponse est correcte et satisfait vos besoins.
+                      {t.evaluationDesc}
                     </p>
                     <ul className="list-disc list-inside text-sm text-gray-400 space-y-1 mt-2">
-                      <li>Le résultat correspond-il à votre demande ?</li>
-                      <li>Le style est-il adapté à votre audience ?</li>
-                      <li>Y a-t-il des éléments à améliorer ?</li>
+                      <li>{t.evaluationQ1}</li>
+                      <li>{t.evaluationQ2}</li>
+                      <li>{t.evaluationQ3}</li>
                     </ul>
                   </div>
 
                   <div className="glass rounded-2xl p-4">
-                    <h4 className="text-lg font-bold text-green-400 mb-2">Itérer</h4>
+                    <h4 className="text-lg font-bold text-green-400 mb-2">{t.iterate}</h4>
                     <p className="text-gray-300 mb-2">
-                      Si la réponse nécessite un ajustement, affinez votre prompt ou fournissez plus de détails.
+                      {t.iterateDesc}
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : &quot;Rends le logo plus minimaliste et ajoute une touche de couleur bleue.&quot;
+                        {t.iterateExample}
                       </p>
                     </div>
                   </div>
@@ -211,12 +208,12 @@ export default function About({ isOpen, onClose }: AboutProps) {
               <div>
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <Lightbulb className="w-6 h-6 text-yellow-400" />
-                  Exemples de prompts efficaces
+                  {t.examplesTitle}
                 </h3>
               </div>
 
               <div className="glass rounded-2xl p-4">
-                <h4 className="text-lg font-bold text-white mb-2">Exemple 1 : Rédaction</h4>
+                <h4 className="text-lg font-bold text-white mb-2">{t.example1}</h4>
                 <div className="glass rounded-lg p-3 mt-2">
                   <pre className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
 {`En tant que rédacteur professionnel, rédige un article de blog de 1000 mots sur l&apos;intelligence artificielle en marketing.
@@ -229,7 +226,7 @@ Références : Style éditorial de blogs tech (Medium, TechCrunch). Utilise des 
               </div>
 
               <div className="glass rounded-2xl p-4">
-                <h4 className="text-lg font-bold text-white mb-2">Exemple 2 : Image</h4>
+                <h4 className="text-lg font-bold text-white mb-2">{t.example2}</h4>
                 <div className="glass rounded-lg p-3 mt-2">
                   <pre className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
 {`En tant que designer graphique, crée un logo moderne pour une startup de fintech.
@@ -242,7 +239,7 @@ Références : Inspire-toi des logos de Stripe, Revolut. Style épuré, couleurs
               </div>
 
               <div className="glass rounded-2xl p-4">
-                <h4 className="text-lg font-bold text-white mb-2">Exemple 3 : Vidéo</h4>
+                <h4 className="text-lg font-bold text-white mb-2">{t.example3}</h4>
                 <div className="glass rounded-lg p-3 mt-2">
                   <pre className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
 {`En tant que réalisateur vidéo, crée une vidéo publicitaire de 30 secondes pour un nouveau produit tech.

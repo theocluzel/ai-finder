@@ -2,36 +2,38 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { MessageSquare, Search, Sparkles } from "lucide-react";
-
-const steps = [
-  {
-    number: "01",
-    title: "Vous décrivez votre besoin",
-    description: "Rédigez simplement ce que vous souhaitez accomplir avec l&apos;IA.",
-    icon: MessageSquare,
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    number: "02",
-    title: "Nous scannons les meilleurs outils",
-    description: "Notre système analyse les meilleures solutions d&apos;IA disponibles et rédige un prompt optimisé pour chaque outil.",
-    icon: Search,
-    color: "from-purple-500 to-pink-500",
-  },
-  {
-    number: "03",
-    title: "Nous vous proposons les mieux adaptés",
-    description: "Recevez une sélection personnalisée d&apos;outils parfaitement adaptés à votre besoin, avec un prompt optimisé prêt à copier-coller.",
-    icon: Sparkles,
-    color: "from-pink-500 to-rose-500",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HowItWorks() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const steps = useMemo(() => [
+    {
+      number: "01",
+      title: t.step1Title,
+      description: t.step1Desc,
+      icon: MessageSquare,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      number: "02",
+      title: t.step2Title,
+      description: t.step2Desc,
+      icon: Search,
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      number: "03",
+      title: t.step3Title,
+      description: t.step3Desc,
+      icon: Sparkles,
+      color: "from-pink-500 to-rose-500",
+    },
+  ], [t]);
 
   return (
     <section ref={ref} className="py-12 sm:py-16 md:py-20 lg:py-32 px-4">
@@ -43,10 +45,10 @@ export default function HowItWorks() {
           className="text-center mb-10 sm:mb-12 md:mb-16"
         >
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
-            Comment ça marche ?
+            {t.howItWorks}
           </h2>
           <p className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto leading-snug">
-            Trois étapes simples pour trouver l&apos;outil d&apos;IA parfait
+            {t.howItWorksSubtitle}
           </p>
         </motion.div>
 

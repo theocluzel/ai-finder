@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Copy, Check, ExternalLink } from "lucide-react";
 import { searchTools, AITool, getToolLogoUrl } from "@/data/aiTools";
 import LogoImage from "./LogoImage";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Fonction pour générer un prompt optimisé avec framework structuré (Tâche, Contexte, Références)
 const generateOptimizedPrompt = (userQuery: string, toolType: string, toolName: string): string => {
@@ -123,6 +124,7 @@ interface HeroProps {
 }
 
 export default function Hero({ selectedCategory }: HeroProps) {
+  const { t } = useLanguage();
   const [searchResults, setSearchResults] = useState<string | null>(null);
   const [results, setResults] = useState<AITool[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -163,14 +165,14 @@ export default function Hero({ selectedCategory }: HeroProps) {
         >
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-5 md:mb-6 leading-tight sm:leading-snug">
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Dites ce que vous voulez faire.
+              {t.heroTitle1}
             </span>
             <br />
-            <span className="text-white">Nous trouvons l&apos;IA idéale.</span>
+            <span className="text-white">{t.heroTitle2}</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-snug sm:leading-relaxed">
-            Décrivez votre besoin, nous vous suggérons les meilleurs sites d&apos;IA adaptés{" "}
-            <span className="text-purple-400 font-semibold">avec un prompt optimisé prêt à copier-coller</span>.
+            {t.heroSubtitle}{" "}
+            <span className="text-purple-400 font-semibold">{t.heroSubtitleHighlight}</span>.
           </p>
         </motion.div>
 
@@ -188,24 +190,24 @@ export default function Hero({ selectedCategory }: HeroProps) {
           >
             <div className="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-8">
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 leading-snug">
-                Pour : <span className="text-purple-400">{searchResults}</span>
+                {t.resultsFor} <span className="text-purple-400">{searchResults}</span>
               </h3>
               {selectedCategory && (
                 <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
-                  Filtre actif : <span className="text-purple-400 font-semibold">{selectedCategory}</span>
+                  {t.activeFilter} <span className="text-purple-400 font-semibold">{selectedCategory}</span>
                 </p>
               )}
               {results.length === 0 ? (
                 <div className="text-center py-8 sm:py-12">
-                  <p className="text-gray-400 text-base sm:text-lg mb-2">Aucun outil trouvé</p>
+                  <p className="text-gray-400 text-base sm:text-lg mb-2">{t.noToolsFound}</p>
                   <p className="text-gray-500 text-xs sm:text-sm">
-                    Essayez une autre recherche ou changez de catégorie
+                    {t.tryAnotherSearch}
                   </p>
                 </div>
               ) : (
                 <>
                   <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
-                    {results.length} suggestion{results.length > 1 ? 's' : ''} d&apos;IA possible{results.length > 1 ? 's' : ''} :
+                    {results.length} {results.length > 1 ? t.suggestionsPlural : t.suggestions} {results.length > 1 ? t.possiblePlural : t.possible} :
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                     {results.map((result, index) => {
@@ -263,7 +265,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                       {/* Prompt optimisé */}
                       <div className="mb-3 sm:mb-4 flex-1">
                         <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                          <p className="text-xs text-gray-500 font-semibold">Prompt optimisé généré :</p>
+                          <p className="text-xs text-gray-500 font-semibold">{t.optimizedPrompt}</p>
                           <motion.span
                             animate={{ opacity: [1, 0.5, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
@@ -302,12 +304,12 @@ export default function Hero({ selectedCategory }: HeroProps) {
                           {copiedIndex === index ? (
                             <>
                               <Check className="w-3 h-3" />
-                              Copié !
+                              {t.copied}
                             </>
                           ) : (
                             <>
                               <Copy className="w-3 h-3" />
-                              Copier le prompt
+                              {t.copyPrompt}
                             </>
                           )}
                         </motion.button>
@@ -321,7 +323,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                         whileTap={{ scale: 0.98 }}
                         className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-xs sm:text-sm font-semibold hover:from-purple-600 hover:to-pink-600 transition-all"
                       >
-                        Visiter le site
+                        {t.visitSite}
                         <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                       </motion.a>
                     </motion.div>
@@ -344,10 +346,10 @@ export default function Hero({ selectedCategory }: HeroProps) {
             className="text-center mb-6 sm:mb-8"
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5 sm:mb-2 leading-snug">
-              Découvrez les meilleurs outils d&apos;IA
+              {t.discoverTools}
             </h2>
             <p className="text-sm sm:text-base text-gray-400 leading-snug">
-              Explorez une sélection d&apos;outils d&apos;intelligence artificielle et leurs spécialités
+              {t.exploreSelection}
             </p>
           </motion.div>
           <AIToolsCarousel />
