@@ -97,12 +97,13 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
                         e.stopPropagation();
                         handleCategorySelect(null);
                       }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-1.5 glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center"
+                      whileHover={{ scale: 1.15, backgroundColor: "rgba(239, 68, 68, 0.2)" }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-1.5 sm:p-2 glass rounded-lg text-red-300 hover:text-red-200 hover:bg-red-500/20 transition-all flex items-center justify-center border border-red-500/30"
                       title={t.removeFilter}
+                      aria-label={t.removeFilter}
                     >
-                      <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
                     </motion.button>
                   )}
                 </div>
