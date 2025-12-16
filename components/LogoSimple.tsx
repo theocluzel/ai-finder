@@ -19,17 +19,12 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
 
       {/* Intérieur */}
       <div
-        className="absolute rounded-full overflow-hidden"
+        className="absolute rounded-full"
         style={{
           inset: border,
           background: "#0f172a",
         }}
-      >
-        {/* Motifs CSS purs */}
-        <span className="logo-dot dot-1" />
-        <span className="logo-dot dot-2" />
-        <span className="logo-dot dot-3" />
-      </div>
+      />
 
       {/* Manche */}
       <div
