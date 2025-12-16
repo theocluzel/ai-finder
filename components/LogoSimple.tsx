@@ -6,17 +6,13 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
   const s = size;
   const border = Math.round(s * 0.22);
   const innerSize = s - border * 2;
-  const center = s / 2;
-
-  // Positions des motifs animés à l'intérieur de la loupe (relatives au conteneur intérieur)
   const innerCenter = innerSize / 2;
+
+  // MAXIMUM 3 motifs ultra subtils - strictement contenus dans le cercle
   const motifs = [
-    { x: innerCenter - innerSize * 0.15, y: innerCenter - innerSize * 0.2, delay: 0 },
-    { x: innerCenter + innerSize * 0.12, y: innerCenter - innerSize * 0.1, delay: 0.2 },
-    { x: innerCenter - innerSize * 0.08, y: innerCenter + innerSize * 0.15, delay: 0.4 },
-    { x: innerCenter + innerSize * 0.15, y: innerCenter + innerSize * 0.12, delay: 0.6 },
-    { x: innerCenter, y: innerCenter - innerSize * 0.25, delay: 0.8 },
-    { x: innerCenter - innerSize * 0.18, y: innerCenter + innerSize * 0.2, delay: 1.0 },
+    { x: innerCenter, y: innerCenter - innerSize * 0.12, delay: 0 },
+    { x: innerCenter - innerSize * 0.1, y: innerCenter + innerSize * 0.08, delay: 2 },
+    { x: innerCenter + innerSize * 0.1, y: innerCenter + innerSize * 0.08, delay: 4 },
   ];
 
   return (
@@ -24,7 +20,7 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
       className="relative flex items-center justify-center"
       style={{ width: s, height: s }}
     >
-      {/* Cercle principal - bord fin et sobre */}
+      {/* Cercle principal - bord fin et net */}
       <div
         className="rounded-full"
         style={{
@@ -34,7 +30,7 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
         }}
       />
 
-      {/* Trou de la loupe - avec overflow pour clipper les motifs */}
+      {/* Trou de la loupe - silhouette parfaite */}
       <div
         className="absolute rounded-full bg-[#0f172a] overflow-hidden"
         style={{
@@ -45,20 +41,27 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
           position: 'relative',
         }}
       >
-        {/* Motifs animés à l'intérieur - VISIBLES POUR DEBUG */}
+        {/* Motifs ultra subtils - animation suggestion, pas feature */}
         {motifs.map((motif, index) => (
-          <div
+          <motion.div
             key={index}
             className="absolute rounded-full"
             style={{
-              width: '8px',
-              height: '8px',
+              width: '3px',
+              height: '3px',
               backgroundColor: '#ffffff',
-              opacity: 0.6,
               left: `${(motif.x / innerSize) * 100}%`,
               top: `${(motif.y / innerSize) * 100}%`,
               transform: 'translate(-50%, -50%)',
-              zIndex: 2,
+            }}
+            animate={{
+              opacity: [0.15, 0.25, 0.15],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              delay: motif.delay,
+              ease: "easeInOut",
             }}
           />
         ))}
