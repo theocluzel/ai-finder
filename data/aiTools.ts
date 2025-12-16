@@ -174,20 +174,6 @@ export const aiToolsList: AITool[] = [
     url: "https://www.starryai.com"
   },
   {
-    name: "Leonardo",
-    category: "Image",
-    type: "Gratuit",
-    description: "Génération d'images professionnelles",
-    url: "https://leonardo.ai"
-  },
-  {
-    name: "Firefly",
-    category: "Image",
-    type: "Gratuit",
-    description: "Génération d'images Adobe avec IA",
-    url: "https://firefly.adobe.com"
-  },
-  {
     name: "Fiesclip",
     category: "Image",
     type: "Gratuit",
@@ -224,6 +210,20 @@ export const aiToolsList: AITool[] = [
   },
   
   // ========== IMAGE - PAYANT ==========
+  {
+    name: "Leonardo",
+    category: "Image",
+    type: "Payant",
+    description: "Génération d'images professionnelles",
+    url: "https://leonardo.ai"
+  },
+  {
+    name: "Firefly",
+    category: "Image",
+    type: "Payant",
+    description: "Génération d'images Adobe avec IA",
+    url: "https://firefly.adobe.com"
+  },
   {
     name: "Gencraft",
     category: "Image",
@@ -434,27 +434,6 @@ export const aiToolsList: AITool[] = [
   
   // ========== VIDÉO - GRATUIT ==========
   {
-    name: "Veed",
-    category: "Vidéo",
-    type: "Gratuit",
-    description: "Édition vidéo en ligne",
-    url: "https://www.veed.io"
-  },
-  {
-    name: "Tome",
-    category: "Vidéo",
-    type: "Gratuit",
-    description: "Création de présentations vidéo",
-    url: "https://tome.app"
-  },
-  {
-    name: "Invideo",
-    category: "Vidéo",
-    type: "Gratuit",
-    description: "Création de vidéos marketing",
-    url: "https://invideo.io"
-  },
-  {
     name: "Video Bolt",
     category: "Vidéo",
     type: "Gratuit",
@@ -467,20 +446,6 @@ export const aiToolsList: AITool[] = [
     type: "Gratuit",
     description: "Édition vidéo mobile et desktop",
     url: "https://www.capcut.com"
-  },
-  {
-    name: "Elai",
-    category: "Vidéo",
-    type: "Gratuit",
-    description: "Création de vidéos avec avatars IA",
-    url: "https://elai.io"
-  },
-  {
-    name: "Movavi",
-    category: "Vidéo",
-    type: "Gratuit",
-    description: "Édition vidéo professionnelle",
-    url: "https://www.movavi.com"
   },
   {
     name: "Flexclip",
@@ -505,6 +470,41 @@ export const aiToolsList: AITool[] = [
   },
   
   // ========== VIDÉO - PAYANT ==========
+  {
+    name: "Veed",
+    category: "Vidéo",
+    type: "Payant",
+    description: "Édition vidéo en ligne",
+    url: "https://www.veed.io"
+  },
+  {
+    name: "Tome",
+    category: "Vidéo",
+    type: "Payant",
+    description: "Création de présentations vidéo",
+    url: "https://tome.app"
+  },
+  {
+    name: "Invideo",
+    category: "Vidéo",
+    type: "Payant",
+    description: "Création de vidéos marketing",
+    url: "https://invideo.io"
+  },
+  {
+    name: "Elai",
+    category: "Vidéo",
+    type: "Payant",
+    description: "Création de vidéos avec avatars IA",
+    url: "https://elai.io"
+  },
+  {
+    name: "Movavi",
+    category: "Vidéo",
+    type: "Payant",
+    description: "Édition vidéo professionnelle",
+    url: "https://www.movavi.com"
+  },
   {
     name: "Replicate",
     category: "Vidéo",
@@ -625,13 +625,6 @@ export const aiToolsList: AITool[] = [
     type: "Gratuit",
     description: "Rédaction et réécriture de texte",
     url: "https://textcortex.com"
-  },
-  {
-    name: "WriteSonic",
-    category: "Rédaction",
-    type: "Gratuit",
-    description: "Génération de contenu marketing",
-    url: "https://writesonic.com"
   },
   {
     name: "Neutraltext",
