@@ -49,42 +49,55 @@ export default function LogoImage({ src, alt, className = "", size = "md" }: Log
     setImageLoading(true);
     setFallbackAttempt(0);
     
-    // Timeout pour forcer le fallback si l'image ne charge pas en 3 secondes
+    // Timeout pour forcer le fallback si l'image ne charge pas en 2 secondes
     const timeout = setTimeout(() => {
-      const domain = extractDomain(src);
-      if (src.includes('google.com/s2/favicons')) {
-        setFallbackAttempt(1);
-        setCurrentSrc(`https://icon.horse/icon/${domain}`);
+      if (imageLoading) {
+        const domain = extractDomain(src);
+        if (src.includes('logo.clearbit.com')) {
+          // Si Clearbit ne charge pas, essayer Google Favicon
+          setFallbackAttempt(1);
+          setCurrentSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+        } else if (src.includes('google.com/s2/favicons')) {
+          // Si Google Favicon ne charge pas, essayer Icon Horse
+          setFallbackAttempt(2);
+          setCurrentSrc(`https://icon.horse/icon/${domain}`);
+        }
       }
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timeout);
-  }, [src]);
+  }, [src, imageLoading]);
 
   const handleError = () => {
     const domain = extractDomain(currentSrc);
     
     // Essayer plusieurs fallbacks dans l'ordre
-    if (fallbackAttempt === 0 && currentSrc.includes('google.com/s2/favicons')) {
-      // Fallback 1: Icon Horse
+    if (fallbackAttempt === 0 && currentSrc.includes('logo.clearbit.com')) {
+      // Fallback 1: Google Favicon API (très fiable)
       setFallbackAttempt(1);
+      setCurrentSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
+      setImageError(false);
+      setImageLoading(true);
+    } else if (fallbackAttempt === 1 && currentSrc.includes('google.com/s2/favicons')) {
+      // Fallback 2: Icon Horse
+      setFallbackAttempt(2);
       setCurrentSrc(`https://icon.horse/icon/${domain}`);
       setImageError(false);
       setImageLoading(true);
-    } else if (fallbackAttempt === 1 && currentSrc.includes('icon.horse')) {
-      // Fallback 2: Clearbit
-      setFallbackAttempt(2);
-      setCurrentSrc(`https://logo.clearbit.com/${domain}`);
-      setImageError(false);
-      setImageLoading(true);
-    } else if (fallbackAttempt === 2 && currentSrc.includes('logo.clearbit.com')) {
+    } else if (fallbackAttempt === 2 && currentSrc.includes('icon.horse')) {
       // Fallback 3: Essayer directement le favicon du site
       setFallbackAttempt(3);
       setCurrentSrc(`https://${domain}/favicon.ico`);
       setImageError(false);
       setImageLoading(true);
+    } else if (fallbackAttempt === 3 && currentSrc.includes('/favicon.ico')) {
+      // Fallback 4: Essayer Clearbit (au cas où Google Favicon a échoué)
+      setFallbackAttempt(4);
+      setCurrentSrc(`https://logo.clearbit.com/${domain}`);
+      setImageError(false);
+      setImageLoading(true);
     } else {
-      // Tous les fallbacks ont échoué - afficher les initiales
+      // Tous les fallbacks ont échoué - ne pas afficher les initiales, juste un placeholder
       setImageError(true);
       setImageLoading(false);
     }
@@ -95,19 +108,12 @@ export default function LogoImage({ src, alt, className = "", size = "md" }: Log
   };
 
   if (imageError) {
-    // Fallback : afficher une icône avec les initiales
-    const initials = alt
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-
+    // Si tous les fallbacks ont échoué, afficher un placeholder simple sans initiales
     return (
       <div
-        className={`${sizeClasses[size]} rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs shadow-lg ${className}`}
+        className={`${sizeClasses[size]} rounded-xl bg-white/5 flex items-center justify-center ${className}`}
       >
-        {initials}
+        <ImageIcon className="w-6 h-6 text-gray-400" />
       </div>
     );
   }
