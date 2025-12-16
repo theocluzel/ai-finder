@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import AnimatedSearchBar from "./AnimatedSearchBar";
 import AIToolsCarousel from "./AIToolsCarousel";
 import { useState, useEffect } from "react";
-import { Copy, Check, ExternalLink } from "lucide-react";
+import { Copy, Check, ExternalLink, Sparkles } from "lucide-react";
 import { searchTools, AITool, getToolLogoUrl, getToolsByCategory, getToolDescription } from "@/data/aiTools";
 import LogoImage from "./LogoImage";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -19,32 +19,46 @@ export default function Hero({ selectedCategory }: HeroProps) {
   const { t, language } = useLanguage();
   const [searchResults, setSearchResults] = useState<string | null>(null);
   const [results, setResults] = useState<AITool[]>([]);
+  const [allResults, setAllResults] = useState<AITool[]>([]); // Tous les résultats disponibles
+  const [displayedCount, setDisplayedCount] = useState(9); // Nombre de résultats affichés
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [generatedPrompts, setGeneratedPrompts] = useState<Record<number, string>>({}); // Prompts générés pour chaque index
 
   const handleSearch = (query: string) => {
     setSearchResults(query);
+    setDisplayedCount(9);
+    setGeneratedPrompts({});
     // Rechercher dans la liste complète des outils
     setTimeout(() => {
-      const searchResults = searchTools(query, selectedCategory);
-      setResults(searchResults.slice(0, 9)); // Limiter à 9 résultats pour l'affichage
+      const searchResultsData = searchTools(query, selectedCategory);
+      setAllResults(searchResultsData);
+      setResults(searchResultsData.slice(0, 9)); // Limiter à 9 résultats pour l'affichage
     }, 500);
   };
 
   // Relancer la recherche quand la catégorie change
   useEffect(() => {
-    if (searchResults) {
+    if (searchResults && searchResults.trim()) {
       // Si on a une recherche, filtrer les résultats
       const searchResultsData = searchTools(searchResults, selectedCategory);
-      setResults(searchResultsData.slice(0, 9));
+      setAllResults(searchResultsData);
+      setResults(searchResultsData.slice(0, displayedCount));
+      setDisplayedCount(9);
     } else if (selectedCategory) {
       // Si on a juste une catégorie sélectionnée sans recherche, afficher les outils de cette catégorie
       const categoryTools = getToolsByCategory(selectedCategory);
-      setResults(categoryTools.slice(0, 9));
-      setSearchResults(" "); // Définir une recherche vide pour afficher les résultats
+      setAllResults(categoryTools);
+      setResults(categoryTools.slice(0, displayedCount));
+      setDisplayedCount(9);
+      setSearchResults(null); // Pas de recherche, juste une catégorie
+      setGeneratedPrompts({});
     } else {
       // Si aucune catégorie n'est sélectionnée et pas de recherche, vider les résultats
       setResults([]);
+      setAllResults([]);
       setSearchResults(null);
+      setDisplayedCount(9);
+      setGeneratedPrompts({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
@@ -54,6 +68,25 @@ export default function Hero({ selectedCategory }: HeroProps) {
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
   };
+
+  const handleGeneratePrompt = (result: AITool, index: number) => {
+    const prompt = generateOptimizedPrompt(
+      selectedCategory || "", 
+      result.category, 
+      result.name, 
+      language
+    );
+    setGeneratedPrompts(prev => ({ ...prev, [index]: prompt }));
+  };
+
+  const handleShowMore = () => {
+    const newCount = displayedCount + 9;
+    setDisplayedCount(newCount);
+    setResults(allResults.slice(0, newCount));
+  };
+
+  const isSearchMode = searchResults && searchResults.trim();
+  const hasMoreResults = allResults.length > displayedCount;
 
   return (
     <main className="min-h-screen pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4">
@@ -133,7 +166,10 @@ export default function Hero({ selectedCategory }: HeroProps) {
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                     {results.map((result, index) => {
-                  const optimizedPrompt = generateOptimizedPrompt(searchResults || "", result.category, result.name, language);
+                  const optimizedPrompt = isSearchMode 
+                    ? generateOptimizedPrompt(searchResults || "", result.category, result.name, language)
+                    : generatedPrompts[index] || null;
+                  const hasPrompt = isSearchMode || generatedPrompts[index];
                   return (
                     <motion.div
                       key={index}
@@ -188,58 +224,70 @@ export default function Hero({ selectedCategory }: HeroProps) {
                         {getTranslatedDescription(result.description, language)}
                       </p>
                       
-                      {/* Prompt optimisé */}
-                      <div className="mb-3 sm:mb-4 flex-1">
-                        <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                          <p className="text-xs text-gray-500 font-semibold">{t.optimizedPrompt}</p>
-                          <motion.span
-                            animate={{ opacity: [1, 0.5, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full"
-                          />
+                      {/* Prompt optimisé - seulement si recherche ou si généré */}
+                      {hasPrompt ? (
+                        <div className="mb-3 sm:mb-4 flex-1">
+                          <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                            <p className="text-xs text-gray-500 font-semibold">{t.optimizedPrompt}</p>
+                            <motion.span
+                              animate={{ opacity: [1, 0.5, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                              className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full"
+                            />
+                          </div>
+                          <div className="glass rounded-lg p-2 sm:p-3 mb-2 max-h-48 sm:max-h-64 overflow-y-auto custom-scrollbar">
+                            <pre className="text-xs text-gray-300 leading-snug sm:leading-relaxed whitespace-pre-wrap font-sans">
+                              {optimizedPrompt && optimizedPrompt.split('\n\n').map((section, idx) => {
+                                if (section.startsWith('Contexte :')) {
+                                  return (
+                                    <span key={idx}>
+                                      <span className="text-purple-400 font-semibold">Contexte :</span>
+                                      {section.replace('Contexte :', '')}
+                                      {'\n\n'}
+                                    </span>
+                                  );
+                                } else if (section.startsWith('Références :')) {
+                                  return (
+                                    <span key={idx}>
+                                      <span className="text-blue-400 font-semibold">Références :</span>
+                                      {section.replace('Références :', '')}
+                                    </span>
+                                  );
+                                }
+                                return <span key={idx}>{section}{'\n\n'}</span>;
+                              })}
+                            </pre>
+                          </div>
+                          <motion.button
+                            onClick={() => optimizedPrompt && handleCopyPrompt(optimizedPrompt, index)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full px-3 py-1.5 sm:py-2 text-xs glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
+                          >
+                            {copiedIndex === index ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                {t.copied}
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                {t.copyPrompt}
+                              </>
+                            )}
+                          </motion.button>
                         </div>
-                        <div className="glass rounded-lg p-2 sm:p-3 mb-2 max-h-48 sm:max-h-64 overflow-y-auto custom-scrollbar">
-                          <pre className="text-xs text-gray-300 leading-snug sm:leading-relaxed whitespace-pre-wrap font-sans">
-                            {optimizedPrompt.split('\n\n').map((section, idx) => {
-                              if (section.startsWith('Contexte :')) {
-                                return (
-                                  <span key={idx}>
-                                    <span className="text-purple-400 font-semibold">Contexte :</span>
-                                    {section.replace('Contexte :', '')}
-                                    {'\n\n'}
-                                  </span>
-                                );
-                              } else if (section.startsWith('Références :')) {
-                                return (
-                                  <span key={idx}>
-                                    <span className="text-blue-400 font-semibold">Références :</span>
-                                    {section.replace('Références :', '')}
-                                  </span>
-                                );
-                              }
-                              return <span key={idx}>{section}{'\n\n'}</span>;
-                            })}
-                          </pre>
-                        </div>
+                      ) : (
                         <motion.button
-                          onClick={() => handleCopyPrompt(optimizedPrompt, index)}
+                          onClick={() => handleGeneratePrompt(result, index)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="w-full px-3 py-1.5 sm:py-2 text-xs glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
+                          className="w-full mb-3 sm:mb-4 px-3 py-2 sm:py-2.5 text-xs sm:text-sm glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30"
                         >
-                          {copiedIndex === index ? (
-                            <>
-                              <Check className="w-3 h-3" />
-                              {t.copied}
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              {t.copyPrompt}
-                            </>
-                          )}
+                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                          {t.generatePrompt}
                         </motion.button>
-                      </div>
+                      )}
 
                       <motion.a
                         href={result.url}
@@ -256,6 +304,19 @@ export default function Hero({ selectedCategory }: HeroProps) {
                   );
                 })}
                   </div>
+                  {/* Bouton "Show me other" si il y a plus de résultats */}
+                  {hasMoreResults && (
+                    <div className="mt-4 sm:mt-6 text-center">
+                      <motion.button
+                        onClick={handleShowMore}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-4 sm:px-6 py-2 sm:py-3 glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 mx-auto bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30"
+                      >
+                        <span className="text-sm sm:text-base font-semibold">{t.showMeOther}</span>
+                      </motion.button>
+                    </div>
+                  )}
                 </>
               )}
             </div>
