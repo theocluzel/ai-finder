@@ -37,6 +37,7 @@ import {
 import LogoImage from "./LogoImage";
 import { aiToolsList, getToolsByCategory } from "@/data/aiTools";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslatedDescription } from "@/lib/descriptionTranslations";
 
 // Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
 const carouselLogoMapping: Record<string, string> = {
@@ -308,7 +309,7 @@ interface AIToolsCarouselProps {
 }
 
 export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   // Filtrer les outils par catégorie si une catégorie est sélectionnée
   let filteredTools = aiTools;
@@ -376,7 +377,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               {tool.name}
             </h3>
             <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-snug">
-              {t.veryGoodAt} <span className="text-purple-400 font-semibold">{tool.specialty}</span>
+              {t.veryGoodAt} <span className="text-purple-400 font-semibold">{getTranslatedDescription(tool.specialty, language)}</span>
             </p>
           </div>
         </div>

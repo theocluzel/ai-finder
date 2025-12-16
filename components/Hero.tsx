@@ -5,10 +5,11 @@ import AnimatedSearchBar from "./AnimatedSearchBar";
 import AIToolsCarousel from "./AIToolsCarousel";
 import { useState, useEffect } from "react";
 import { Copy, Check, ExternalLink } from "lucide-react";
-import { searchTools, AITool, getToolLogoUrl, getToolsByCategory } from "@/data/aiTools";
+import { searchTools, AITool, getToolLogoUrl, getToolsByCategory, getToolDescription } from "@/data/aiTools";
 import LogoImage from "./LogoImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { generateOptimizedPrompt } from "@/lib/promptGenerator";
+import { getTranslatedDescription } from "@/lib/descriptionTranslations";
 
 interface HeroProps {
   selectedCategory?: string;
@@ -184,7 +185,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                         </div>
                       </div>
                       <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 leading-snug">
-                        {result.description}
+                        {getTranslatedDescription(result.description, language)}
                       </p>
                       
                       {/* Prompt optimisé */}

@@ -6,8 +6,17 @@ export interface AITool {
   category: "Image" | "Design" | "Vidéo" | "Rédaction";
   type: "Gratuit" | "Payant";
   description: string;
+  descriptionEn?: string; // Description en anglais (optionnel)
   url: string;
   logoUrl?: string; // URL du logo (optionnel, généré automatiquement si non fourni)
+}
+
+// Fonction helper pour obtenir la description traduite
+export const getToolDescription = (tool: AITool, language: 'fr' | 'en'): string => {
+  if (language === 'en' && tool.descriptionEn) {
+    return tool.descriptionEn;
+  }
+  return tool.description;
 }
 
 // Fonction pour extraire le domaine d'une URL
