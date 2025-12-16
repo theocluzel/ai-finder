@@ -8,14 +8,15 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
   const innerSize = s - border * 2;
   const center = s / 2;
 
-  // Positions des motifs animés à l'intérieur de la loupe
+  // Positions des motifs animés à l'intérieur de la loupe (relatives au conteneur intérieur)
+  const innerCenter = innerSize / 2;
   const motifs = [
-    { x: center - innerSize * 0.15, y: center - innerSize * 0.2, delay: 0 },
-    { x: center + innerSize * 0.12, y: center - innerSize * 0.1, delay: 0.2 },
-    { x: center - innerSize * 0.08, y: center + innerSize * 0.15, delay: 0.4 },
-    { x: center + innerSize * 0.15, y: center + innerSize * 0.12, delay: 0.6 },
-    { x: center, y: center - innerSize * 0.25, delay: 0.8 },
-    { x: center - innerSize * 0.18, y: center + innerSize * 0.2, delay: 1.0 },
+    { x: innerCenter - innerSize * 0.15, y: innerCenter - innerSize * 0.2, delay: 0 },
+    { x: innerCenter + innerSize * 0.12, y: innerCenter - innerSize * 0.1, delay: 0.2 },
+    { x: innerCenter - innerSize * 0.08, y: innerCenter + innerSize * 0.15, delay: 0.4 },
+    { x: innerCenter + innerSize * 0.15, y: innerCenter + innerSize * 0.12, delay: 0.6 },
+    { x: innerCenter, y: innerCenter - innerSize * 0.25, delay: 0.8 },
+    { x: innerCenter - innerSize * 0.18, y: innerCenter + innerSize * 0.2, delay: 1.0 },
   ];
 
   return (
@@ -41,29 +42,23 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
           height: innerSize,
           left: border,
           top: border,
+          position: 'relative',
         }}
       >
-        {/* Motifs animés à l'intérieur - petits cercles subtils */}
+        {/* Motifs animés à l'intérieur - VISIBLES POUR DEBUG */}
         {motifs.map((motif, index) => (
-          <motion.div
+          <div
             key={index}
-            className="absolute rounded-full bg-white/20"
+            className="absolute rounded-full"
             style={{
-              width: innerSize * 0.08,
-              height: innerSize * 0.08,
-              left: motif.x - (innerSize * 0.08) / 2,
-              top: motif.y - (innerSize * 0.08) / 2,
-            }}
-            animate={{
-              opacity: [0.15, 0.4, 0.15],
-              scale: [0.9, 1.1, 0.9],
-              y: [0, -innerSize * 0.03, 0],
-            }}
-            transition={{
-              duration: 3.5,
-              repeat: Infinity,
-              delay: motif.delay,
-              ease: "easeInOut",
+              width: '8px',
+              height: '8px',
+              backgroundColor: '#ffffff',
+              opacity: 0.6,
+              left: `${(motif.x / innerSize) * 100}%`,
+              top: `${(motif.y / innerSize) * 100}%`,
+              transform: 'translate(-50%, -50%)',
+              zIndex: 2,
             }}
           />
         ))}
