@@ -5,6 +5,7 @@ export const translations = {
     // Header
     about: "À propos",
     allCategories: "Toutes les catégories",
+    logoSubtitle: "Trouvez l'IA idéale",
     
     // Hero
     heroTitle1: "Dites ce que vous voulez faire.",
@@ -88,6 +89,7 @@ export const translations = {
     // Header
     about: "About",
     allCategories: "All categories",
+    logoSubtitle: "Find the ideal AI",
     
     // Hero
     heroTitle1: "Tell us what you want to do.",

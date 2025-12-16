@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Image as ImageIcon, Video, Mic, Code2, FileText, Sparkles } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const floating = [
   { Icon: Sparkles, x: 30, y: 26, delay: 0.0 },
@@ -13,13 +14,14 @@ const floating = [
 ];
 
 export default function LogoAnimated({ size = 44 }: { size?: number }) {
+  const { t } = useLanguage();
   const vb = 92;
   const cx = 42, cy = 42, r = 34;
 
   return (
     <div className="flex items-center gap-3 select-none">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full">
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full relative z-10">
           <defs>
             <linearGradient id="afGrad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#60A5FA" />
@@ -46,7 +48,7 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             cx={cx}
             cy={cy}
             r={r}
-            fill="rgba(255,255,255,0.06)"
+            fill="rgba(255,255,255,0.1)"
             stroke="url(#afGrad)"
             strokeWidth="5"
             filter="url(#softGlow)"
@@ -56,7 +58,7 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
         </svg>
 
         {/* Icônes flottantes (clippées dans la loupe) */}
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="absolute inset-0 w-full h-full">
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 20 }}>
           <g clipPath="url(#glassClip)">
             <circle cx={cx} cy={cy} r={r - 5} fill="rgba(255,255,255,0.02)" />
             {floating.map(({ Icon, x, y, delay }, i) => (
@@ -85,7 +87,7 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             AI Finder
           </span>
         </div>
-        <div className="text-xs text-white/45 -mt-0.5">Trouvez l&apos;IA idéale</div>
+        <div className="text-xs text-white/45 -mt-0.5">{t.logoSubtitle}</div>
       </div>
     </div>
   );
