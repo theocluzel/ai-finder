@@ -61,7 +61,12 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
               whileHover={{ scale: 1.02 }}
               className="scale-90 sm:scale-100"
             >
-              <LogoSimple size={36} />
+              <div className="flex items-center gap-3">
+                <LogoSimple size={36} />
+                <span className="text-lg font-semibold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  AI Finder
+                </span>
+              </div>
             </motion.div>
             
             <nav className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
