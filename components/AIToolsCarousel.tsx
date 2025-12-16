@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageSquare,
@@ -310,6 +311,15 @@ interface AIToolsCarouselProps {
 
 export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
   const { t, language } = useLanguage();
+
+  // #region agent log
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('[data-ai-card="true"]');
+    if (!el) return;
+    const cs = window.getComputedStyle(el);
+    fetch('http://127.0.0.1:7242/ingest/12eb2311-b260-46cc-aed5-0bbfacf741c8',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AIToolsCarousel.tsx:logger',message:'card computed style',data:{borderTopWidth:cs.borderTopWidth,borderRightWidth:cs.borderRightWidth,borderBottomWidth:cs.borderBottomWidth,borderLeftWidth:cs.borderLeftWidth,borderTopColor:cs.borderTopColor,borderRightColor:cs.borderRightColor,borderBottomColor:cs.borderBottomColor,borderLeftColor:cs.borderLeftColor,outlineWidth:cs.outlineWidth,outlineStyle:cs.outlineStyle,outlineColor:cs.outlineColor,boxShadow:cs.boxShadow,backgroundColor:cs.backgroundColor,backgroundImage:cs.backgroundImage},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'border'})}).catch(()=>{});
+  }, []);
+  // #endregion
   
   // Filtrer les outils par catégorie si une catégorie est sélectionnée
   let filteredTools = aiTools;
@@ -351,46 +361,56 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
     ? (baseDuration * filteredTools.length) / totalToolsCount
     : baseDuration;
 
-  const renderCard = (tool: typeof aiTools[0], index: number) => {
+  function ValidatedCarouselCard({ tool, index }: { tool: (typeof aiToolsBase)[number]; index: number }) {
     const logoUrl = getLogoUrlByName(tool.name);
-    
+    const [status, setStatus] = useState<"loading" | "ok" | "fail">("loading");
+
+    // Si pas d'URL => on ne rend pas la carte (règle produit)
+    if (!logoUrl) return null;
+    if (status === "fail") return null;
+
     return (
       <motion.div
-        key={`${tool.name}-${index}`}
         whileHover={{ scale: 1.02 }}
-        className="flex-shrink-0 w-56 sm:w-64 md:w-80 glass-strong rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 cursor-pointer group relative z-10"
+        data-ai-card="true"
+        className="flex-shrink-0 w-56 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 cursor-pointer group relative z-10"
       >
         <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3 md:space-y-4">
-          <motion.div
-            className="flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
+          <div className="flex items-center justify-center relative">
+            {/* Skeleton neutre tant que le logo n'est pas validé */}
+            {status === "loading" && (
+              <div className="absolute inset-0 rounded-xl bg-white/5 animate-pulse" />
+            )}
             <LogoImage
               src={logoUrl}
               alt={tool.name}
               size="md"
-              className="sm:hidden shadow-lg"
+              className="sm:hidden shadow-none"
+              onStatusChange={(s) => setStatus(s)}
             />
             <LogoImage
               src={logoUrl}
               alt={tool.name}
               size="lg"
-              className="hidden sm:block shadow-lg"
+              className="hidden sm:block shadow-none"
+              onStatusChange={(s) => setStatus(s)}
             />
-          </motion.div>
+          </div>
           <div>
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 sm:mb-2 leading-snug">
               {tool.name}
             </h3>
             <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-snug">
-              {t.veryGoodAt} <span className="text-purple-400 font-semibold">{getTranslatedDescription(tool.specialty, language)}</span>
+              {t.veryGoodAt}{" "}
+              <span className="text-purple-400 font-semibold">
+                {getTranslatedDescription(tool.specialty, language)}
+              </span>
             </p>
           </div>
         </div>
       </motion.div>
     );
-  };
+  }
 
   return (
     <div className="w-full py-6 sm:py-8 md:py-12">
@@ -411,7 +431,9 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               },
             }}
           >
-            {duplicatedTools1.map((tool, index) => renderCard(tool, index))}
+            {duplicatedTools1.map((tool, index) => (
+              <ValidatedCarouselCard key={`${tool.name}-${index}`} tool={tool} index={index} />
+            ))}
           </motion.div>
         </div>
       </div>
@@ -434,7 +456,9 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               },
             }}
           >
-            {duplicatedTools2.map((tool, index) => renderCard(tool, index))}
+            {duplicatedTools2.map((tool, index) => (
+              <ValidatedCarouselCard key={`${tool.name}-${index}`} tool={tool} index={index} />
+            ))}
           </motion.div>
         </div>
       </div>

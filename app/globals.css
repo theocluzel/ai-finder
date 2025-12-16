@@ -61,6 +61,19 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Premium card surface (no visible border, no backdrop blur) */
+.card-surface {
+  background: rgba(255, 255, 255, 0.06);
+  border: 0;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.22),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}
+
+.card-surface:hover {
+  background: rgba(255, 255, 255, 0.075);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -17,6 +17,16 @@ interface HeroProps {
 
 export default function Hero({ selectedCategory }: HeroProps) {
   const { t, language } = useLanguage();
+  const [logoStatus, setLogoStatus] = useState<Record<string, "loading" | "ok" | "fail">>({});
+
+  // #region agent log
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('[data-ai-card="true"]');
+    if (!el) return;
+    const cs = window.getComputedStyle(el);
+    fetch('http://127.0.0.1:7242/ingest/12eb2311-b260-46cc-aed5-0bbfacf741c8',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Hero.tsx:logger',message:'card computed style',data:{borderTopWidth:cs.borderTopWidth,borderRightWidth:cs.borderRightWidth,borderBottomWidth:cs.borderBottomWidth,borderLeftWidth:cs.borderLeftWidth,borderTopColor:cs.borderTopColor,borderRightColor:cs.borderRightColor,borderBottomColor:cs.borderBottomColor,borderLeftColor:cs.borderLeftColor,outlineWidth:cs.outlineWidth,outlineStyle:cs.outlineStyle,outlineColor:cs.outlineColor,boxShadow:cs.boxShadow,backgroundColor:cs.backgroundColor,backgroundImage:cs.backgroundImage},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'border'})}).catch(()=>{});
+  }, []);
+  // #endregion
   const [searchResults, setSearchResults] = useState<string | null>(null);
   const [results, setResults] = useState<AITool[]>([]);
   const [allResults, setAllResults] = useState<AITool[]>([]); // Tous les résultats disponibles
@@ -165,18 +175,63 @@ export default function Hero({ selectedCategory }: HeroProps) {
                     {results.length} {results.length > 1 ? t.suggestionsPlural : t.suggestions} {results.length > 1 ? t.possiblePlural : t.possible} :
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-                    {results.map((result, index) => {
+                {results.map((result, index) => {
                   const optimizedPrompt = isSearchMode 
                     ? generateOptimizedPrompt(searchResults || "", result.category, result.name, language)
                     : generatedPrompts[index] || null;
                   const hasPrompt = isSearchMode || generatedPrompts[index];
+
+                  const status = logoStatus[result.name] ?? "loading";
+                  if (status === "fail") {
+                    return null;
+                  }
+
+                  if (status !== "ok") {
+                    return (
+                      <div
+                        key={`${result.name}-skeleton`}
+                        data-ai-card="true"
+                        className="card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 flex flex-col h-auto sm:h-[140px] md:h-auto"
+                      >
+                        <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                          <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-white/5 animate-pulse overflow-hidden">
+                            {/* On monte le LogoImage en invisible pour valider le logo sans afficher de placeholder */}
+                            <div className="opacity-0">
+                              <LogoImage
+                                src={getToolLogoUrl(result)}
+                                alt={result.name}
+                                size="sm"
+                                className="sm:hidden"
+                                onStatusChange={(s) => setLogoStatus((prev) => ({ ...prev, [result.name]: s }))}
+                              />
+                              <LogoImage
+                                src={getToolLogoUrl(result)}
+                                alt={result.name}
+                                size="md"
+                                className="hidden sm:block"
+                                onStatusChange={(s) => setLogoStatus((prev) => ({ ...prev, [result.name]: s }))}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="h-4 w-2/3 bg-white/5 rounded animate-pulse mb-2" />
+                            <div className="h-3 w-1/2 bg-white/5 rounded animate-pulse" />
+                          </div>
+                        </div>
+                        <div className="h-3 w-full bg-white/5 rounded animate-pulse mb-2" />
+                        <div className="h-3 w-4/5 bg-white/5 rounded animate-pulse" />
+                      </div>
+                    );
+                  }
+
                   return (
                     <motion.div
-                      key={index}
+                      key={result.name}
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.05 }}
-                      className="glass rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 hover:bg-white/10 transition-colors flex flex-col h-auto sm:h-[140px] md:h-auto"
+                      data-ai-card="true"
+                      className="card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 transition-colors flex flex-col h-auto sm:h-[140px] md:h-auto"
                     >
                       {/* Logo et en-tête */}
                       <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
@@ -190,18 +245,20 @@ export default function Hero({ selectedCategory }: HeroProps) {
                             alt={result.name}
                             size="sm"
                             className="sm:hidden"
+                            onStatusChange={(s) => setLogoStatus((prev) => ({ ...prev, [result.name]: s }))}
                           />
                           <LogoImage
                             src={getToolLogoUrl(result)}
                             alt={result.name}
                             size="md"
                             className="hidden sm:block"
+                            onStatusChange={(s) => setLogoStatus((prev) => ({ ...prev, [result.name]: s }))}
                           />
                         </motion.div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2 leading-snug">
-                            {result.name}
-                          </h4>
+                          {result.name}
+                        </h4>
                           <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             <span className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold bg-purple-500/20 text-purple-300 rounded-full">
                               {result.category === "Image" ? t.categoryImage :
@@ -216,7 +273,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                                 : "bg-yellow-500/20 text-yellow-300"
                             }`}>
                               {result.type === "Gratuit" ? t.typeFree : t.typePaid}
-                            </span>
+                        </span>
                           </div>
                         </div>
                       </div>
@@ -229,54 +286,54 @@ export default function Hero({ selectedCategory }: HeroProps) {
                         <div className="mb-3 sm:mb-4 flex-1">
                           <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
                             <p className="text-xs text-gray-500 font-semibold">{t.optimizedPrompt}</p>
-                            <motion.span
-                              animate={{ opacity: [1, 0.5, 1] }}
-                              transition={{ duration: 2, repeat: Infinity }}
+                          <motion.span
+                            animate={{ opacity: [1, 0.5, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
                               className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full"
-                            />
-                          </div>
+                          />
+                        </div>
                           <div className="glass rounded-lg p-2 sm:p-3 mb-2 max-h-48 sm:max-h-64 overflow-y-auto custom-scrollbar">
                             <pre className="text-xs text-gray-300 leading-snug sm:leading-relaxed whitespace-pre-wrap font-sans">
                               {optimizedPrompt && optimizedPrompt.split('\n\n').map((section, idx) => {
-                                if (section.startsWith('Contexte :')) {
-                                  return (
-                                    <span key={idx}>
-                                      <span className="text-purple-400 font-semibold">Contexte :</span>
-                                      {section.replace('Contexte :', '')}
-                                      {'\n\n'}
-                                    </span>
-                                  );
-                                } else if (section.startsWith('Références :')) {
-                                  return (
-                                    <span key={idx}>
-                                      <span className="text-blue-400 font-semibold">Références :</span>
-                                      {section.replace('Références :', '')}
-                                    </span>
-                                  );
-                                }
-                                return <span key={idx}>{section}{'\n\n'}</span>;
-                              })}
-                            </pre>
-                          </div>
-                          <motion.button
+                              if (section.startsWith('Contexte :')) {
+                                return (
+                                  <span key={idx}>
+                                    <span className="text-purple-400 font-semibold">Contexte :</span>
+                                    {section.replace('Contexte :', '')}
+                                    {'\n\n'}
+                                  </span>
+                                );
+                              } else if (section.startsWith('Références :')) {
+                                return (
+                                  <span key={idx}>
+                                    <span className="text-blue-400 font-semibold">Références :</span>
+                                    {section.replace('Références :', '')}
+                                  </span>
+                                );
+                              }
+                              return <span key={idx}>{section}{'\n\n'}</span>;
+                            })}
+                          </pre>
+                        </div>
+                        <motion.button
                             onClick={() => optimizedPrompt && handleCopyPrompt(optimizedPrompt, index)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className="w-full px-3 py-1.5 sm:py-2 text-xs glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
-                          >
-                            {copiedIndex === index ? (
-                              <>
-                                <Check className="w-3 h-3" />
+                        >
+                          {copiedIndex === index ? (
+                            <>
+                              <Check className="w-3 h-3" />
                                 {t.copied}
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3 h-3" />
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3 h-3" />
                                 {t.copyPrompt}
-                              </>
-                            )}
-                          </motion.button>
-                        </div>
+                            </>
+                          )}
+                        </motion.button>
+                      </div>
                       ) : (
                         <motion.button
                           onClick={() => handleGeneratePrompt(result, index)}
@@ -303,7 +360,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                     </motion.div>
                   );
                 })}
-                  </div>
+              </div>
                   {/* Bouton "Show me other" si il y a plus de résultats */}
                   {hasMoreResults && (
                     <div className="mt-4 sm:mt-6 text-center">
@@ -326,22 +383,22 @@ export default function Hero({ selectedCategory }: HeroProps) {
         {/* AI Tools Carousel - seulement à l'accueil (pas dans les catégories) */}
         {!selectedCategory && (
           <div className="mb-10 sm:mb-12 md:mb-24">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="text-center mb-6 sm:mb-8"
-            >
+          >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5 sm:mb-2 leading-snug">
                 {t.discoverTools}
-              </h2>
+            </h2>
               <p className="text-sm sm:text-base text-gray-400 leading-snug">
                 {t.exploreSelection}
-              </p>
-            </motion.div>
+            </p>
+          </motion.div>
             <AIToolsCarousel selectedCategory={selectedCategory} />
-          </div>
+        </div>
         )}
       </div>
     </main>
