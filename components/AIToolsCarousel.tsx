@@ -35,7 +35,7 @@ import {
   Cpu,
 } from "lucide-react";
 import LogoImage from "./LogoImage";
-import { aiToolsList } from "@/data/aiTools";
+import { aiToolsList, getToolsByCategory } from "@/data/aiTools";
 
 // Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
 const carouselLogoMapping: Record<string, string> = {
@@ -302,10 +302,29 @@ const shuffleDeterministic = <T,>(array: T[], seed: number = 42): T[] => {
 
 const aiTools = shuffleDeterministic(aiToolsBase);
 
-export default function AIToolsCarousel() {
+interface AIToolsCarouselProps {
+  selectedCategory?: string;
+}
+
+export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
+  // Filtrer les outils par catégorie si une catégorie est sélectionnée
+  let filteredTools = aiTools;
+  if (selectedCategory) {
+    // Obtenir les outils de la catégorie depuis la vraie liste
+    const categoryTools = getToolsByCategory(selectedCategory);
+    // Filtrer aiTools pour ne garder que ceux qui sont dans la catégorie
+    const categoryToolNames = new Set(categoryTools.map(t => t.name));
+    filteredTools = aiTools.filter(tool => categoryToolNames.has(tool.name));
+    
+    // Si aucun outil ne correspond, utiliser tous les outils
+    if (filteredTools.length === 0) {
+      filteredTools = aiTools;
+    }
+  }
+  
   // Diviser les outils en deux groupes pour les deux carrousels
-  const firstHalf = aiTools.slice(0, Math.ceil(aiTools.length / 2));
-  const secondHalf = aiTools.slice(Math.ceil(aiTools.length / 2));
+  const firstHalf = filteredTools.slice(0, Math.ceil(filteredTools.length / 2));
+  const secondHalf = filteredTools.slice(Math.ceil(filteredTools.length / 2));
 
   // Dupliquer les outils pour un défilement infini
   const duplicatedTools1 = [...firstHalf, ...firstHalf];

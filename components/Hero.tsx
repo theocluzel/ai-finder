@@ -5,7 +5,7 @@ import AnimatedSearchBar from "./AnimatedSearchBar";
 import AIToolsCarousel from "./AIToolsCarousel";
 import { useState, useEffect } from "react";
 import { Copy, Check, ExternalLink } from "lucide-react";
-import { searchTools, AITool, getToolLogoUrl } from "@/data/aiTools";
+import { searchTools, AITool, getToolLogoUrl, getToolsByCategory } from "@/data/aiTools";
 import LogoImage from "./LogoImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -141,8 +141,18 @@ export default function Hero({ selectedCategory }: HeroProps) {
   // Relancer la recherche quand la catégorie change
   useEffect(() => {
     if (searchResults) {
+      // Si on a une recherche, filtrer les résultats
       const searchResultsData = searchTools(searchResults, selectedCategory);
       setResults(searchResultsData.slice(0, 9));
+    } else if (selectedCategory) {
+      // Si on a juste une catégorie sélectionnée sans recherche, afficher les outils de cette catégorie
+      const categoryTools = getToolsByCategory(selectedCategory);
+      setResults(categoryTools.slice(0, 9));
+      setSearchResults(" "); // Définir une recherche vide pour afficher les résultats
+    } else {
+      // Si aucune catégorie n'est sélectionnée et pas de recherche, vider les résultats
+      setResults([]);
+      setSearchResults(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
@@ -190,7 +200,15 @@ export default function Hero({ selectedCategory }: HeroProps) {
           >
             <div className="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-8">
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 leading-snug">
-                {t.resultsFor} <span className="text-purple-400">{searchResults}</span>
+                {searchResults && searchResults.trim() ? (
+                  <>
+                    {t.resultsFor} <span className="text-purple-400">{searchResults}</span>
+                  </>
+                ) : selectedCategory ? (
+                  <>
+                    {t.resultsFor} <span className="text-purple-400">{selectedCategory}</span>
+                  </>
+                ) : null}
               </h3>
               {selectedCategory && (
                 <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
@@ -352,7 +370,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
               {t.exploreSelection}
             </p>
           </motion.div>
-          <AIToolsCarousel />
+          <AIToolsCarousel selectedCategory={selectedCategory} />
         </div>
       </div>
     </main>
