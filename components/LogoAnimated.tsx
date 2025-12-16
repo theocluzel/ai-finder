@@ -85,7 +85,7 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             AI Finder
           </span>
         </div>
-        <div className="text-xs text-white/45 -mt-0.5">Trouvez l'IA idéale</div>
+        <div className="text-xs text-white/45 -mt-0.5">Trouvez l&apos;IA idéale</div>
       </div>
     </div>
   );

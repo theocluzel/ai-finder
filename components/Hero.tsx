@@ -166,10 +166,10 @@ export default function Hero({ selectedCategory }: HeroProps) {
               Dites ce que vous voulez faire.
             </span>
             <br />
-            <span className="text-white">Nous trouvons l'IA idéale.</span>
+            <span className="text-white">Nous trouvons l&apos;IA idéale.</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-snug sm:leading-relaxed">
-            Décrivez votre besoin, nous vous suggérons les meilleurs sites d'IA adaptés{" "}
+            Décrivez votre besoin, nous vous suggérons les meilleurs sites d&apos;IA adaptés{" "}
             <span className="text-purple-400 font-semibold">avec un prompt optimisé prêt à copier-coller</span>.
           </p>
         </motion.div>
@@ -205,7 +205,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
               ) : (
                 <>
                   <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
-                    {results.length} suggestion{results.length > 1 ? 's' : ''} d'IA possible{results.length > 1 ? 's' : ''} :
+                    {results.length} suggestion{results.length > 1 ? 's' : ''} d&apos;IA possible{results.length > 1 ? 's' : ''} :
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
                     {results.map((result, index) => {
@@ -344,10 +344,10 @@ export default function Hero({ selectedCategory }: HeroProps) {
             className="text-center mb-6 sm:mb-8"
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5 sm:mb-2 leading-snug">
-              Découvrez les meilleurs outils d'IA
+              Découvrez les meilleurs outils d&apos;IA
             </h2>
             <p className="text-sm sm:text-base text-gray-400 leading-snug">
-              Explorez une sélection d'outils d'intelligence artificielle et leurs spécialités
+              Explorez une sélection d&apos;outils d&apos;intelligence artificielle et leurs spécialités
             </p>
           </motion.div>
           <AIToolsCarousel />

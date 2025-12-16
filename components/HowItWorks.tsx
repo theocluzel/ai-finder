@@ -46,7 +46,7 @@ export default function HowItWorks() {
             Comment ça marche ?
           </h2>
           <p className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto leading-snug">
-            Trois étapes simples pour trouver l'outil d'IA parfait
+            Trois étapes simples pour trouver l&apos;outil d&apos;IA parfait
           </p>
         </motion.div>
 

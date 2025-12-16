@@ -119,6 +119,7 @@ export default function LogoImage({ src, alt, className = "", size = "md" }: Log
           <ImageIcon className="w-6 h-6 text-gray-500" />
         </div>
       )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={currentSrc}
         alt={alt}

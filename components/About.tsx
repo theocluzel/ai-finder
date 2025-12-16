@@ -96,7 +96,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">Pourquoi bien prompter ?</h3>
                   <p className="text-gray-300 leading-relaxed">
-                    Un prompt efficace est la clé pour obtenir des résultats de qualité avec l'IA. 
+                    Un prompt efficace est la clé pour obtenir des résultats de qualité avec l&apos;IA. 
                     Les frameworks de prompts aident à obtenir des réponses plus claires, pertinentes 
                     et adaptées à vos besoins spécifiques.
                   </p>
@@ -133,8 +133,8 @@ export default function About({ isOpen, onClose }: AboutProps) {
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : "En tant que designer graphique, crée un logo moderne pour une startup tech. 
-                        Format vectoriel, style minimaliste."
+                        Exemple : &quot;En tant que designer graphique, crée un logo moderne pour une startup tech. 
+                        Format vectoriel, style minimaliste.&quot;
                       </p>
                     </div>
                   </div>
@@ -146,8 +146,8 @@ export default function About({ isOpen, onClose }: AboutProps) {
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : "Le logo doit être reconnaissable à petite taille, fonctionner en noir et blanc, 
-                        et refléter l'innovation technologique."
+                        Exemple : &quot;Le logo doit être reconnaissable à petite taille, fonctionner en noir et blanc, 
+                        et refléter l&apos;innovation technologique.&quot;
                       </p>
                     </div>
                   </div>
@@ -159,8 +159,8 @@ export default function About({ isOpen, onClose }: AboutProps) {
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : "Inspire-toi des logos de marques tech modernes : Apple, Google, Airbnb. 
-                        Style épuré, couleurs limitées."
+                        Exemple : &quot;Inspire-toi des logos de marques tech modernes : Apple, Google, Airbnb. 
+                        Style épuré, couleurs limitées.&quot;
                       </p>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
-                        Exemple : "Rends le logo plus minimaliste et ajoute une touche de couleur bleue."
+                        Exemple : &quot;Rends le logo plus minimaliste et ajoute une touche de couleur bleue.&quot;
                       </p>
                     </div>
                   </div>
