@@ -192,7 +192,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
         </div>
 
         {/* Results */}
-        {searchResults && (
+        {(searchResults || selectedCategory) && (
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
