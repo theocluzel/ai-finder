@@ -235,8 +235,8 @@ export default function Hero({ selectedCategory }: HeroProps) {
                               className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full"
                             />
                           </div>
-                          <div className="glass rounded-lg p-2 sm:p-3 mb-2 max-h-48 sm:max-h-64 overflow-y-auto custom-scrollbar" style={{ scrollBehavior: 'smooth' }}>
-                            <pre className="text-xs text-gray-300 leading-snug sm:leading-relaxed whitespace-pre-wrap font-sans" style={{ willChange: 'transform' }}>
+                          <div className="glass rounded-lg p-2 sm:p-3 mb-2 max-h-48 sm:max-h-64 overflow-y-auto custom-scrollbar">
+                            <pre className="text-xs text-gray-300 leading-snug sm:leading-relaxed whitespace-pre-wrap font-sans">
                               {optimizedPrompt && optimizedPrompt.split('\n\n').map((section, idx) => {
                                 if (section.startsWith('Contexte :')) {
                                   return (

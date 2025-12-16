@@ -90,11 +90,9 @@ body {
 
 /* Custom scrollbar pour les zones de prompt */
 .custom-scrollbar {
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   will-change: scroll-position;
   transform: translateZ(0); /* Force GPU acceleration */
-  backface-visibility: hidden;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
