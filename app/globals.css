@@ -114,6 +114,47 @@ body {
   background: rgba(168, 85, 247, 0.7);
 }
 
+/* Logo glass reflection - micro-animation premium */
+.logo-glass {
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.08) 70%,
+    transparent 100%
+  );
+  animation: glassReflect 14s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glassReflect {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%) translateY(100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) translateY(200%);
+    opacity: 0;
+  }
+}
+
 
 
 

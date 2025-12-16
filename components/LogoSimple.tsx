@@ -20,7 +20,7 @@ export default function LogoSimple({ size = 36 }: { size?: number }) {
 
       {/* Intérieur - effet verre très léger, à peine teinté */}
       <div
-        className="absolute rounded-full"
+        className="absolute rounded-full logo-glass"
         style={{
           width: innerSize,
           height: innerSize,
