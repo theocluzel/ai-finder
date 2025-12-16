@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Globe } from "lucide-react";
+import { ChevronDown, Globe, X } from "lucide-react";
 import About from "./About";
 import LogoAnimated from "./LogoAnimated";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -72,20 +72,40 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
             <nav className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
               {/* Menu déroulant des catégories */}
               <div className="relative" ref={dropdownRef}>
-                <motion.button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1 sm:gap-2"
-                >
-                  <span className="hidden sm:inline">
-                    {selectedCategory ? categories.find(c => c.value === selectedCategory)?.label : t.allCategories}
-                  </span>
-                  <span className="sm:hidden">Cat.</span>
-                  <ChevronDown 
-                    className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
-                  />
-                </motion.button>
+                <div className="flex items-center gap-1.5">
+                  <motion.button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1 sm:gap-2 ${
+                      selectedCategory ? 'bg-purple-500/20' : ''
+                    }`}
+                  >
+                    <span className="hidden sm:inline">
+                      {selectedCategory ? categories.find(c => c.value === selectedCategory)?.label : t.allCategories}
+                    </span>
+                    <span className="sm:hidden">Cat.</span>
+                    <ChevronDown 
+                      className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                    />
+                  </motion.button>
+                  
+                  {/* Bouton pour enlever le filtre */}
+                  {selectedCategory && (
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCategorySelect(null);
+                      }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-1.5 glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center"
+                      title={t.removeFilter}
+                    >
+                      <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </motion.button>
+                  )}
+                </div>
 
                 <AnimatePresence>
                   {isDropdownOpen && (

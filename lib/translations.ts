@@ -6,6 +6,7 @@ export const translations = {
     about: "À propos",
     allCategories: "Toutes les catégories",
     logoSubtitle: "Trouvez l'IA idéale",
+    removeFilter: "Enlever le filtre",
     
     // Hero
     heroTitle1: "Dites ce que vous voulez faire.",
@@ -90,6 +91,7 @@ export const translations = {
     about: "About",
     allCategories: "All categories",
     logoSubtitle: "Find the ideal AI",
+    removeFilter: "Remove filter",
     
     // Hero
     heroTitle1: "Tell us what you want to do.",
