@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { motion } from "framer-motion";
 import { Image as ImageIcon, Video, Mic, Code2, FileText, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,23 +19,28 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
   const vb = 92;
   const cx = 42, cy = 42, r = 34;
 
+  // IDs uniques pour éviter les conflits SVG
+  const gradientId = useId();
+  const clipId = useId();
+  const glowId = useId();
+
   return (
     <div className="flex items-center gap-3 select-none">
       <div className="relative" style={{ width: size, height: size }}>
         <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full relative z-10">
           <defs>
-            <linearGradient id="afGrad" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#60A5FA" />
               <stop offset="50%" stopColor="#A78BFA" />
               <stop offset="100%" stopColor="#F472B6" />
             </linearGradient>
 
             {/* Tout ce qui est dans ce groupe reste dans la loupe */}
-            <clipPath id="glassClip">
+            <clipPath id={clipId}>
               <circle cx={cx} cy={cy} r={r - 5} />
             </clipPath>
 
-            <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -48,18 +54,25 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             cx={cx}
             cy={cy}
             r={r}
-            fill="rgba(255,255,255,0.1)"
-            stroke="url(#afGrad)"
-            strokeWidth="5"
-            filter="url(#softGlow)"
+            fill="rgba(255,255,255,0.08)"
+            stroke={`url(#${gradientId})`}
+            strokeWidth="6"
+            filter={`url(#${glowId})`}
+            style={{ stroke: "#A78BFA" }}
           />
           {/* Manche */}
-          <path d="M62 62 L82 82" stroke="url(#afGrad)" strokeWidth="7" strokeLinecap="round" />
+          <path 
+            d="M62 62 L82 82" 
+            stroke={`url(#${gradientId})`} 
+            strokeWidth="7" 
+            strokeLinecap="round"
+            style={{ stroke: "#A78BFA" }}
+          />
         </svg>
 
         {/* Icônes flottantes (clippées dans la loupe) */}
         <svg viewBox={`0 0 ${vb} ${vb}`} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 20 }}>
-          <g clipPath="url(#glassClip)">
+          <g clipPath={`url(#${clipId})`}>
             <circle cx={cx} cy={cy} r={r - 5} fill="rgba(255,255,255,0.02)" />
             {floating.map(({ Icon, x, y, delay }, i) => (
               <foreignObject key={i} x={x} y={y} width="18" height="18">
