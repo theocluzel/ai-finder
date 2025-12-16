@@ -22,14 +22,14 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
   // IDs uniques pour éviter les conflits SVG
   const gradientId = useId();
   const clipId = useId();
-  const glowId = useId();
 
   return (
     <div className="flex items-center gap-3 select-none">
       <div className="relative" style={{ width: size, height: size }}>
         <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full relative z-10">
           <defs>
-            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            {/* Même dégradé que le texte : from-blue-400 via-purple-400 to-pink-400 */}
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#60A5FA" />
               <stop offset="50%" stopColor="#A78BFA" />
               <stop offset="100%" stopColor="#F472B6" />
@@ -39,14 +39,6 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             <clipPath id={clipId}>
               <circle cx={cx} cy={cy} r={r - 5} />
             </clipPath>
-
-            <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
 
           {/* Lentille glass */}
@@ -57,7 +49,6 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             fill="rgba(255,255,255,0.08)"
             stroke={`url(#${gradientId})`}
             strokeWidth="6"
-            filter={`url(#${glowId})`}
             style={{ stroke: "#A78BFA" }}
           />
           {/* Manche */}
