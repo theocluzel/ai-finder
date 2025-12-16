@@ -31,116 +31,27 @@ const extractDomain = (url: string): string => {
   }
 };
 
-// Fonction pour générer l'URL du logo avec plusieurs sources de fallback
-export const getLogoUrl = (tool: AITool): string => {
+// Fonction pour générer l'URL du logo - UNIQUEMENT logos officiels haute résolution
+export const getLogoUrl = (tool: AITool): string | null => {
   if (tool.logoUrl) {
     return tool.logoUrl;
   }
   
   const domain = extractDomain(tool.url);
   
-  // Utiliser Google Favicon API en premier car très fiable et gratuit
-  // Format: https://www.google.com/s2/favicons?domain=example.com&sz=128
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  // Utiliser Clearbit Logo API - logos officiels haute résolution (256x256+)
+  // Format: https://logo.clearbit.com/example.com
+  // Retourne null si le logo n'est pas disponible (pas de fallback favicon)
+  return `https://logo.clearbit.com/${domain}`;
 };
 
-// Mapping complet des logos pour tous les 80 outils IA
-// Utilise Google Favicon API en priorité (très fiable et gratuit)
-// Avec fallback automatique vers Icon Horse puis Clearbit si nécessaire
+// Mapping des logos officiels haute résolution (optionnel)
+// Si un logo officiel SVG/PNG haute résolution est fourni ici, il sera utilisé en priorité
+// Sinon, Clearbit Logo API sera utilisé (logos officiels 256x256+)
+// Format attendu : URL directe vers logo SVG ou PNG ≥ 256x256
 const logoMapping: Record<string, string> = {
-  // IMAGE - GRATUIT
-  "Night Cafe": "https://www.google.com/s2/favicons?domain=nightcafe.studio&sz=128",
-  "High Cafe Playground": "https://www.google.com/s2/favicons?domain=playgroundai.com&sz=128",
-  "Craiyon": "https://www.google.com/s2/favicons?domain=craiyon.com&sz=128",
-  "Starryai": "https://www.google.com/s2/favicons?domain=starryai.com&sz=128",
-  "Leonardo": "https://www.google.com/s2/favicons?domain=leonardo.ai&sz=128",
-  "Firefly": "https://www.google.com/s2/favicons?domain=adobe.com&sz=128",
-  "Fiesclip": "https://www.google.com/s2/favicons?domain=fiesclip.com&sz=128",
-  "Remini AI": "https://www.google.com/s2/favicons?domain=remini.ai&sz=128",
-  "Scribble AI": "https://www.google.com/s2/favicons?domain=scribblediffusion.com&sz=128",
-  "Fotor AI": "https://www.google.com/s2/favicons?domain=fotor.com&sz=128",
-  "Nano Banana Pro": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
-  
-  // IMAGE - PAYANT
-  "Gencraft": "https://www.google.com/s2/favicons?domain=gencraft.com&sz=128",
-  "Deep AI": "https://www.google.com/s2/favicons?domain=deepai.org&sz=128",
-  "Getimg AI": "https://www.google.com/s2/favicons?domain=getimg.ai&sz=128",
-  "Notpot": "https://www.google.com/s2/favicons?domain=notpot.ai&sz=128",
-  "LetsEnhance": "https://www.google.com/s2/favicons?domain=letsenhance.io&sz=128",
-  "DALL-E": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Midjourney": "https://www.google.com/s2/favicons?domain=midjourney.com&sz=128",
-  
-  // DESIGN - GRATUIT
-  "Framer X": "https://www.google.com/s2/favicons?domain=framer.com&sz=128",
-  "Brandcrowd": "https://www.google.com/s2/favicons?domain=brandcrowd.com&sz=128",
-  "Huemint": "https://www.google.com/s2/favicons?domain=huemint.com&sz=128",
-  "Logomaster": "https://www.google.com/s2/favicons?domain=logomaster.ai&sz=128",
-  "Figma": "https://www.google.com/s2/favicons?domain=figma.com&sz=128",
-  "Autodraw": "https://www.google.com/s2/favicons?domain=autodraw.com&sz=128",
-  "Pixelcut": "https://www.google.com/s2/favicons?domain=pixelcut.ai&sz=128",
-  "Fontjoy": "https://www.google.com/s2/favicons?domain=fontjoy.com&sz=128",
-  "Tinywow": "https://www.google.com/s2/favicons?domain=tinywow.com&sz=128",
-  "Visme": "https://www.google.com/s2/favicons?domain=visme.co&sz=128",
-  
-  // DESIGN - PAYANT
-  "Uizard": "https://www.google.com/s2/favicons?domain=uizard.io&sz=128",
-  "Magician": "https://www.google.com/s2/favicons?domain=magician.design&sz=128",
-  "Flair AI": "https://www.google.com/s2/favicons?domain=flair.ai&sz=128",
-  "Designs AI": "https://www.google.com/s2/favicons?domain=designs.ai&sz=128",
-  "Photoshop": "https://www.google.com/s2/favicons?domain=adobe.com&sz=128",
-  "Illustrator": "https://www.google.com/s2/favicons?domain=adobe.com&sz=128",
-  "Simplified": "https://www.google.com/s2/favicons?domain=simplified.com&sz=128",
-  "Looka": "https://www.google.com/s2/favicons?domain=looka.com&sz=128",
-  
-  // VIDÉO - GRATUIT
-  "Veed": "https://www.google.com/s2/favicons?domain=veed.io&sz=128",
-  "Tome": "https://www.google.com/s2/favicons?domain=tome.app&sz=128",
-  "Invideo": "https://www.google.com/s2/favicons?domain=invideo.io&sz=128",
-  "Video Bolt": "https://www.google.com/s2/favicons?domain=videobolt.net&sz=128",
-  "Capcut": "https://www.google.com/s2/favicons?domain=capcut.com&sz=128",
-  "Elai": "https://www.google.com/s2/favicons?domain=elai.io&sz=128",
-  "Movavi": "https://www.google.com/s2/favicons?domain=movavi.com&sz=128",
-  "Flexclip": "https://www.google.com/s2/favicons?domain=flexclip.com&sz=128",
-  "Wepik": "https://www.google.com/s2/favicons?domain=wepik.com&sz=128",
-  "Luma AI": "https://www.google.com/s2/favicons?domain=lumalabs.ai&sz=128",
-  
-  // VIDÉO - PAYANT
-  "Replicate": "https://www.google.com/s2/favicons?domain=replicate.com&sz=128",
-  "Descript": "https://www.google.com/s2/favicons?domain=descript.com&sz=128",
-  "Genmo": "https://www.google.com/s2/favicons?domain=genmo.ai&sz=128",
-  "Pictory": "https://www.google.com/s2/favicons?domain=pictory.ai&sz=128",
-  "Artiphoria": "https://www.google.com/s2/favicons?domain=artiphoria.ai&sz=128",
-  "Captions": "https://www.google.com/s2/favicons?domain=captions.ai&sz=128",
-  "Runway": "https://www.google.com/s2/favicons?domain=runwayml.com&sz=128",
-  "Colossyan": "https://www.google.com/s2/favicons?domain=colossyan.com&sz=128",
-  "Syllaby": "https://www.google.com/s2/favicons?domain=syllaby.io&sz=128",
-  "Synthesia": "https://www.google.com/s2/favicons?domain=synthesia.io&sz=128",
-  
-  // RÉDACTION - GRATUIT
-  "ChatGPT": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Copy.ai": "https://www.google.com/s2/favicons?domain=copy.ai&sz=128",
-  "You": "https://www.google.com/s2/favicons?domain=you.com&sz=128",
-  "Perplexity": "https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128",
-  "Rytr AI": "https://www.google.com/s2/favicons?domain=rytr.me&sz=128",
-  "Hive": "https://www.google.com/s2/favicons?domain=hive.com&sz=128",
-  "Text Cortex": "https://www.google.com/s2/favicons?domain=textcortex.com&sz=128",
-  "WriteSonic": "https://www.google.com/s2/favicons?domain=writesonic.com&sz=128",
-  "Neutraltext": "https://www.google.com/s2/favicons?domain=neutraltext.com&sz=128",
-  "Hyperwrite": "https://www.google.com/s2/favicons?domain=hyperwrite.ai&sz=128",
-  
-  // RÉDACTION - PAYANT
-  "Anyword": "https://www.google.com/s2/favicons?domain=anyword.com&sz=128",
-  "AClosersCopy": "https://www.google.com/s2/favicons?domain=aclosercopy.com&sz=128",
-  "Frase AI": "https://www.google.com/s2/favicons?domain=frase.io&sz=128",
-  "Peppertype": "https://www.google.com/s2/favicons?domain=peppertype.ai&sz=128",
-  "Jasper": "https://www.google.com/s2/favicons?domain=jasper.ai&sz=128",
-  "Chibi AI": "https://www.google.com/s2/favicons?domain=chibi.ai&sz=128",
-  "Growthbar": "https://www.google.com/s2/favicons?domain=growthbar.seo&sz=128",
-  
-  // Outils communs (apparaissent dans plusieurs catégories)
-  "Canva": "https://www.google.com/s2/favicons?domain=canva.com&sz=128",
-  "Surfer": "https://www.google.com/s2/favicons?domain=surfer.ai&sz=128",
-  "Word AI": "https://www.google.com/s2/favicons?domain=wordai.com&sz=128",
+  // Les logos officiels peuvent être ajoutés ici si nécessaire
+  // Format: "Nom de l'outil": "https://example.com/logo.svg"
 };
 
 export const aiToolsList: AITool[] = [
@@ -714,17 +625,18 @@ export const aiToolsList: AITool[] = [
   },
 ];
 
-// Fonction pour obtenir l'URL du logo d'un outil avec fallback multiple
-export const getToolLogoUrl = (tool: AITool): string => {
-  // Vérifier d'abord le mapping spécial
+// Fonction pour obtenir l'URL du logo d'un outil - UNIQUEMENT logos officiels
+export const getToolLogoUrl = (tool: AITool): string | null => {
+  // Vérifier d'abord le mapping spécial (si logo officiel SVG/PNG fourni)
   if (logoMapping[tool.name]) {
     return logoMapping[tool.name];
   }
   
   const domain = extractDomain(tool.url);
   
-  // Utiliser Google Favicon API (très fiable)
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  // Utiliser Clearbit Logo API - logos officiels haute résolution (256x256+)
+  // Retourne null si le logo n'est pas disponible (pas de fallback favicon)
+  return `https://logo.clearbit.com/${domain}`;
 };
 
 // Fonction pour rechercher des outils par requête

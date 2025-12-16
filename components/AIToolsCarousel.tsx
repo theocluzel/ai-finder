@@ -39,116 +39,17 @@ import { aiToolsList, getToolsByCategory } from "@/data/aiTools";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedDescription } from "@/lib/descriptionTranslations";
 
-// Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
+// Mapping spécial pour les outils du carrousel - UNIQUEMENT logos officiels
+// Si un logo officiel SVG/PNG haute résolution est fourni ici, il sera utilisé
+// Sinon, Clearbit Logo API sera utilisé (logos officiels 256x256+)
 const carouselLogoMapping: Record<string, string> = {
-  "ChatGPT": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Claude": "https://www.google.com/s2/favicons?domain=anthropic.com&sz=128",
-  "Perplexity": "https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128",
-  "Notion AI": "https://www.google.com/s2/favicons?domain=notion.so&sz=128",
-  "Zapier": "https://www.google.com/s2/favicons?domain=zapier.com&sz=128",
-  "Make": "https://www.google.com/s2/favicons?domain=make.com&sz=128",
-  "Jasper": "https://www.google.com/s2/favicons?domain=jasper.ai&sz=128",
-  "Surfer": "https://www.google.com/s2/favicons?domain=surfer.ai&sz=128",
-  "Frase AI": "https://www.google.com/s2/favicons?domain=frase.io&sz=128",
-  "Growthbar": "https://www.google.com/s2/favicons?domain=growthbar.seo&sz=128",
-  "QuickBooks AI": "https://www.google.com/s2/favicons?domain=quickbooks.intuit.com&sz=128",
-  "Xero": "https://www.google.com/s2/favicons?domain=xero.com&sz=128",
-  "Plaid": "https://www.google.com/s2/favicons?domain=plaid.com&sz=128",
-  "Klarity": "https://www.google.com/s2/favicons?domain=klarity.com&sz=128",
-  "Salesforce Einstein": "https://www.google.com/s2/favicons?domain=salesforce.com&sz=128",
-  "HubSpot": "https://www.google.com/s2/favicons?domain=hubspot.com&sz=128",
-  "Intercom": "https://www.google.com/s2/favicons?domain=intercom.com&sz=128",
-  "Drift": "https://www.google.com/s2/favicons?domain=drift.com&sz=128",
-  "Crayon": "https://www.google.com/s2/favicons?domain=crayon.co&sz=128",
-  "Brandwatch": "https://www.google.com/s2/favicons?domain=brandwatch.com&sz=128",
-  "Sprout Social": "https://www.google.com/s2/favicons?domain=sproutsocial.com&sz=128",
-  "BuzzSumo": "https://www.google.com/s2/favicons?domain=buzzsumo.com&sz=128",
-  "Otter.ai": "https://www.google.com/s2/favicons?domain=otter.ai&sz=128",
-  "Fireflies": "https://www.google.com/s2/favicons?domain=fireflies.ai&sz=128",
-  "Calendly AI": "https://www.google.com/s2/favicons?domain=calendly.com&sz=128",
-  "Motion": "https://www.google.com/s2/favicons?domain=motion.app&sz=128",
-  "Reclaim": "https://www.google.com/s2/favicons?domain=reclaim.ai&sz=128",
-  "Superhuman": "https://www.google.com/s2/favicons?domain=superhuman.com&sz=128",
-  "SaneBox": "https://www.google.com/s2/favicons?domain=sanebox.com&sz=128",
-  "Boomerang": "https://www.google.com/s2/favicons?domain=boomerangapp.com&sz=128",
-  "Midjourney": "https://www.google.com/s2/favicons?domain=midjourney.com&sz=128",
-  "DALL-E": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Figma": "https://www.google.com/s2/favicons?domain=figma.com&sz=128",
-  "Canva": "https://www.google.com/s2/favicons?domain=canva.com&sz=128",
-  "Looka": "https://www.google.com/s2/favicons?domain=looka.com&sz=128",
-  "Runway": "https://www.google.com/s2/favicons?domain=runwayml.com&sz=128",
-  "Synthesia": "https://www.google.com/s2/favicons?domain=synthesia.io&sz=128",
-  "Descript": "https://www.google.com/s2/favicons?domain=descript.com&sz=128",
-  "GitHub Copilot": "https://www.google.com/s2/favicons?domain=github.com&sz=128",
-  "Cursor": "https://www.google.com/s2/favicons?domain=cursor.sh&sz=128",
-  "Replit": "https://www.google.com/s2/favicons?domain=replit.com&sz=128",
-  "GPTZero": "https://www.google.com/s2/favicons?domain=gptzero.me&sz=128",
-  "Originality.ai": "https://www.google.com/s2/favicons?domain=originality.ai&sz=128",
-  "Copyleaks": "https://www.google.com/s2/favicons?domain=copyleaks.com&sz=128",
-  "Sensity AI": "https://www.google.com/s2/favicons?domain=sensity.ai&sz=128",
-  "Reality Defender": "https://www.google.com/s2/favicons?domain=realitydefender.com&sz=128",
-  "GPT-4o": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Gemini 2.0": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
-  "Grok": "https://www.google.com/s2/favicons?domain=x.com&sz=128",
-  "Mistral Large": "https://www.google.com/s2/favicons?domain=mistral.ai&sz=128",
-  "LLaVA": "https://www.google.com/s2/favicons?domain=llava-vl.github.io&sz=128",
-  "Kosmos-2": "https://www.google.com/s2/favicons?domain=microsoft.com&sz=128",
-  "Stable Diffusion XL": "https://www.google.com/s2/favicons?domain=stability.ai&sz=128",
-  "Ideogram": "https://www.google.com/s2/favicons?domain=ideogram.ai&sz=128",
-  "Kandinsky": "https://www.google.com/s2/favicons?domain=kandinsky.ai&sz=128",
-  "Playground v2": "https://www.google.com/s2/favicons?domain=playgroundai.com&sz=128",
-  "Fooocus": "https://www.google.com/s2/favicons?domain=fooocus.com&sz=128",
-  "DragGAN": "https://www.google.com/s2/favicons?domain=draggan.github.io&sz=128",
-  "ControlNet": "https://www.google.com/s2/favicons?domain=lllyasviel.github.io&sz=128",
-  "Sora": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Pika Labs": "https://www.google.com/s2/favicons?domain=pika.art&sz=128",
-  "Luma Dream Machine": "https://www.google.com/s2/favicons?domain=lumalabs.ai&sz=128",
-  "Kaiber": "https://www.google.com/s2/favicons?domain=kaiber.ai&sz=128",
-  "PixVerse": "https://www.google.com/s2/favicons?domain=pixverse.ai&sz=128",
-  "Viggle AI": "https://www.google.com/s2/favicons?domain=viggle.ai&sz=128",
-  "ElevenLabs": "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128",
-  "OpenAI TTS": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Whisper": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-  "Coqui AI": "https://www.google.com/s2/favicons?domain=coqui.ai&sz=128",
-  "PlayHT": "https://www.google.com/s2/favicons?domain=play.ht&sz=128",
-  "RVC": "https://www.google.com/s2/favicons?domain=rvc.com&sz=128",
-  "Copy.ai": "https://www.google.com/s2/favicons?domain=copy.ai&sz=128",
-  "Sudowrite": "https://www.google.com/s2/favicons?domain=sudowrite.com&sz=128",
-  "NovelAI": "https://www.google.com/s2/favicons?domain=novelai.net&sz=128",
-  "Rytr": "https://www.google.com/s2/favicons?domain=rytr.me&sz=128",
-  "GrammarlyGO": "https://www.google.com/s2/favicons?domain=grammarly.com&sz=128",
-  "Wolfram Alpha": "https://www.google.com/s2/favicons?domain=wolframalpha.com&sz=128",
-  "Photomath": "https://www.google.com/s2/favicons?domain=photomath.com&sz=128",
-  "MathGPT": "https://www.google.com/s2/favicons?domain=mathgpt.com&sz=128",
-  "Symbolab": "https://www.google.com/s2/favicons?domain=symbolab.com&sz=128",
-  "Scribe AI": "https://www.google.com/s2/favicons?domain=scribe.ai&sz=128",
-  "Replit Ghostwriter": "https://www.google.com/s2/favicons?domain=replit.com&sz=128",
-  "Codeium": "https://www.google.com/s2/favicons?domain=codeium.com&sz=128",
-  "Devin": "https://www.google.com/s2/favicons?domain=cognition-labs.com&sz=128",
-  "Tabnine": "https://www.google.com/s2/favicons?domain=tabnine.com&sz=128",
-  "Cohere Command-R": "https://www.google.com/s2/favicons?domain=cohere.com&sz=128",
-  "Tome AI": "https://www.google.com/s2/favicons?domain=tome.app&sz=128",
-  "Remini": "https://www.google.com/s2/favicons?domain=remini.ai&sz=128",
-  "Topaz Video Enhance": "https://www.google.com/s2/favicons?domain=topazlabs.com&sz=128",
-  "Green Screen AI": "https://www.google.com/s2/favicons?domain=greenscreenai.com&sz=128",
-  "ClipDrop": "https://www.google.com/s2/favicons?domain=clipdrop.co&sz=128",
-  "Palette.fm": "https://www.google.com/s2/favicons?domain=palette.fm&sz=128",
-  "Photoroom AI": "https://www.google.com/s2/favicons?domain=photoroom.com&sz=128",
-  "Shortcut": "https://www.google.com/s2/favicons?domain=shortcut.com&sz=128",
-  "Alforithmic": "https://www.google.com/s2/favicons?domain=alforithmic.com&sz=128",
-  "DeepFaceLab": "https://www.google.com/s2/favicons?domain=deepfacelab.com&sz=128",
-  "InsightFace": "https://www.google.com/s2/favicons?domain=insightface.ai&sz=128",
-  "DreamTalk AI": "https://www.google.com/s2/favicons?domain=dreamtalk.ai&sz=128",
-  "AlphaFold": "https://www.google.com/s2/favicons?domain=alphafold.ebi.ac.uk&sz=128",
-  "AlphaMissense": "https://www.google.com/s2/favicons?domain=alphafold.ebi.ac.uk&sz=128",
-  "AutoGPT": "https://www.google.com/s2/favicons?domain=autogpt.net&sz=128",
-  "BabyAGI": "https://www.google.com/s2/favicons?domain=babyagi.com&sz=128",
-  "Roboflow": "https://www.google.com/s2/favicons?domain=roboflow.com&sz=128",
+  // Les logos officiels peuvent être ajoutés ici si nécessaire
+  // Format: "Nom de l'outil": "https://example.com/logo.svg"
 };
 
-// Fonction pour obtenir l'URL du logo d'un outil par son nom
-const getLogoUrlByName = (toolName: string): string => {
-  // Vérifier d'abord le mapping spécial
+// Fonction pour obtenir l'URL du logo d'un outil par son nom - UNIQUEMENT logos officiels
+const getLogoUrlByName = (toolName: string): string | null => {
+  // Vérifier d'abord le mapping spécial (si logo officiel SVG/PNG fourni)
   if (carouselLogoMapping[toolName]) {
     return carouselLogoMapping[toolName];
   }
@@ -157,16 +58,12 @@ const getLogoUrlByName = (toolName: string): string => {
   const tool = aiToolsList.find(t => t.name === toolName || t.name.includes(toolName) || toolName.includes(t.name));
   if (tool) {
     const domain = tool.url.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
-    // Utiliser Google Favicon API (très fiable)
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    // Utiliser Clearbit Logo API - logos officiels haute résolution (256x256+)
+    return `https://logo.clearbit.com/${domain}`;
   }
   
-  // Fallback : générer depuis le nom
-  const domain = toolName.toLowerCase()
-    .replace(/\s+/g, '')
-    .replace(/ai$/i, '')
-    .replace(/\./g, '');
-  return `https://www.google.com/s2/favicons?domain=${domain}.com&sz=128`;
+  // Pas de fallback - retourner null si pas trouvé
+  return null;
 };
 
 const aiToolsBase = [
@@ -354,6 +251,11 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   const renderCard = (tool: typeof aiTools[0], index: number) => {
     const logoUrl = getLogoUrlByName(tool.name);
     
+    // Ne pas afficher l'outil si pas de logo disponible
+    if (!logoUrl) {
+      return null;
+    }
+    
     return (
       <motion.div
         key={`${tool.name}-${index}`}
@@ -411,7 +313,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               },
             }}
           >
-            {duplicatedTools1.map((tool, index) => renderCard(tool, index))}
+            {duplicatedTools1.map((tool, index) => renderCard(tool, index)).filter(Boolean)}
           </motion.div>
         </div>
       </div>
@@ -434,7 +336,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               },
             }}
           >
-            {duplicatedTools2.map((tool, index) => renderCard(tool, index))}
+            {duplicatedTools2.map((tool, index) => renderCard(tool, index)).filter(Boolean)}
           </motion.div>
         </div>
       </div>
