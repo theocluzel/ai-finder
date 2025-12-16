@@ -19,20 +19,21 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
   const vb = 92;
   const cx = 42, cy = 42, r = 34;
 
-  // IDs uniques pour éviter les conflits SVG
-  const gradientId = useId();
-  const clipId = useId();
+  // IDs uniques pour éviter les conflits SVG - avec préfixe pour garantir l'unicité
+  const baseId = useId().replace(/:/g, '-');
+  const gradientId = `logo-grad-${baseId}`;
+  const clipId = `logo-clip-${baseId}`;
 
   return (
     <div className="flex items-center gap-3 select-none">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full relative z-10">
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full relative z-10" xmlns="http://www.w3.org/2000/svg">
           <defs>
             {/* Même dégradé que le texte : from-blue-400 via-purple-400 to-pink-400 */}
-            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#60A5FA" />
-              <stop offset="50%" stopColor="#A78BFA" />
-              <stop offset="100%" stopColor="#F472B6" />
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#60A5FA" stopOpacity="1" />
+              <stop offset="50%" stopColor="#A78BFA" stopOpacity="1" />
+              <stop offset="100%" stopColor="#F472B6" stopOpacity="1" />
             </linearGradient>
 
             {/* Tout ce qui est dans ce groupe reste dans la loupe */}
@@ -46,23 +47,37 @@ export default function LogoAnimated({ size = 44 }: { size?: number }) {
             cx={cx}
             cy={cy}
             r={r}
-            fill="rgba(255,255,255,0.08)"
+            fill="rgba(255,255,255,0.12)"
             stroke={`url(#${gradientId})`}
-            strokeWidth="6"
-            style={{ stroke: "#A78BFA" }}
+            strokeWidth="7"
+            strokeLinejoin="round"
+            style={{ 
+              stroke: "#A78BFA",
+              strokeWidth: "7",
+              fill: "rgba(255,255,255,0.12)"
+            }}
           />
           {/* Manche */}
           <path 
             d="M62 62 L82 82" 
             stroke={`url(#${gradientId})`} 
-            strokeWidth="7" 
+            strokeWidth="8" 
             strokeLinecap="round"
-            style={{ stroke: "#A78BFA" }}
+            strokeLinejoin="round"
+            style={{ 
+              stroke: "#A78BFA",
+              strokeWidth: "8"
+            }}
           />
         </svg>
 
         {/* Icônes flottantes (clippées dans la loupe) */}
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 20 }}>
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 20 }} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+              <circle cx={cx} cy={cy} r={r - 5} />
+            </clipPath>
+          </defs>
           <g clipPath={`url(#${clipId})`}>
             <circle cx={cx} cy={cy} r={r - 5} fill="rgba(255,255,255,0.02)" />
             {floating.map(({ Icon, x, y, delay }, i) => (
