@@ -341,8 +341,15 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   const totalWidth1 = (cardWidth + gap) * firstHalf.length;
   const totalWidth2 = (cardWidth + gap) * secondHalf.length;
 
-  // Durée beaucoup plus lente (300 secondes = 5 minutes)
-  const duration = 300;
+  // Durée de base (300 secondes = 5 minutes) pour tous les outils
+  const baseDuration = 300;
+  const totalToolsCount = aiTools.length; // Nombre total d'outils sans filtre
+  
+  // Ajuster la durée proportionnellement pour maintenir la même vitesse
+  // Si on a moins d'outils, on réduit la durée pour parcourir la même distance relative
+  const duration = selectedCategory 
+    ? (baseDuration * filteredTools.length) / totalToolsCount
+    : baseDuration;
 
   const renderCard = (tool: typeof aiTools[0], index: number) => {
     const logoUrl = getLogoUrlByName(tool.name);
