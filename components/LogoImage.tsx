@@ -48,52 +48,28 @@ export default function LogoImage({ src, alt, className = "", size = "md" }: Log
     setImageError(false);
     setImageLoading(true);
     setFallbackAttempt(0);
-    
-    // Timeout pour forcer le fallback si l'image ne charge pas en 2 secondes
-    const timeout = setTimeout(() => {
-      if (imageLoading) {
-        const domain = extractDomain(src);
-        if (src.includes('logo.clearbit.com')) {
-          // Si Clearbit ne charge pas, essayer Google Favicon
-          setFallbackAttempt(1);
-          setCurrentSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
-        } else if (src.includes('google.com/s2/favicons')) {
-          // Si Google Favicon ne charge pas, essayer Icon Horse
-          setFallbackAttempt(2);
-          setCurrentSrc(`https://icon.horse/icon/${domain}`);
-        }
-      }
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, [src, imageLoading]);
+  }, [src]);
 
   const handleError = () => {
     const domain = extractDomain(currentSrc);
     
     // Essayer plusieurs fallbacks dans l'ordre
-    if (fallbackAttempt === 0 && currentSrc.includes('logo.clearbit.com')) {
-      // Fallback 1: Google Favicon API (très fiable)
+    if (fallbackAttempt === 0) {
+      // Fallback 1: Toujours essayer Google Favicon API en premier (très fiable)
       setFallbackAttempt(1);
       setCurrentSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`);
       setImageError(false);
       setImageLoading(true);
-    } else if (fallbackAttempt === 1 && currentSrc.includes('google.com/s2/favicons')) {
+    } else if (fallbackAttempt === 1) {
       // Fallback 2: Icon Horse
       setFallbackAttempt(2);
       setCurrentSrc(`https://icon.horse/icon/${domain}`);
       setImageError(false);
       setImageLoading(true);
-    } else if (fallbackAttempt === 2 && currentSrc.includes('icon.horse')) {
+    } else if (fallbackAttempt === 2) {
       // Fallback 3: Essayer directement le favicon du site
       setFallbackAttempt(3);
       setCurrentSrc(`https://${domain}/favicon.ico`);
-      setImageError(false);
-      setImageLoading(true);
-    } else if (fallbackAttempt === 3 && currentSrc.includes('/favicon.ico')) {
-      // Fallback 4: Essayer Clearbit (au cas où Google Favicon a échoué)
-      setFallbackAttempt(4);
-      setCurrentSrc(`https://logo.clearbit.com/${domain}`);
       setImageError(false);
       setImageLoading(true);
     } else {
