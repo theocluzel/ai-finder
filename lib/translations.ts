@@ -7,6 +7,12 @@ export const translations = {
     allCategories: "Toutes les catégories",
     logoSubtitle: "Trouvez l'IA idéale",
     removeFilter: "Enlever le filtre",
+    categoryImage: "Image",
+    categoryDesign: "Design",
+    categoryVideo: "Vidéo",
+    categoryWriting: "Rédaction",
+    typeFree: "Gratuit",
+    typePaid: "Payant",
     
     // Hero
     heroTitle1: "Dites ce que vous voulez faire.",
@@ -38,6 +44,7 @@ export const translations = {
     visitSite: "Visiter le site",
     discoverTools: "Découvrez les meilleurs outils d'IA",
     exploreSelection: "Explorez une sélection d'outils d'intelligence artificielle et leurs spécialités",
+    veryGoodAt: "Est très bon en",
     
     // How It Works
     howItWorks: "Comment ça marche ?",
@@ -92,6 +99,12 @@ export const translations = {
     allCategories: "All categories",
     logoSubtitle: "Find the ideal AI",
     removeFilter: "Remove filter",
+    categoryImage: "Image",
+    categoryDesign: "Design",
+    categoryVideo: "Video",
+    categoryWriting: "Writing",
+    typeFree: "Free",
+    typePaid: "Paid",
     
     // Hero
     heroTitle1: "Tell us what you want to do.",
@@ -123,6 +136,7 @@ export const translations = {
     visitSite: "Visit site",
     discoverTools: "Discover the best AI tools",
     exploreSelection: "Explore a selection of artificial intelligence tools and their specialties",
+    veryGoodAt: "Very good at",
     
     // How It Works
     howItWorks: "How it works?",

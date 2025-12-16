@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import LogoImage from "./LogoImage";
 import { aiToolsList, getToolsByCategory } from "@/data/aiTools";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
 const carouselLogoMapping: Record<string, string> = {
@@ -307,6 +308,8 @@ interface AIToolsCarouselProps {
 }
 
 export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
+  const { t } = useLanguage();
+  
   // Filtrer les outils par catégorie si une catégorie est sélectionnée
   let filteredTools = aiTools;
   if (selectedCategory) {
@@ -373,7 +376,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
               {tool.name}
             </h3>
             <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-snug">
-              Est très bon en <span className="text-purple-400 font-semibold">{tool.specialty}</span>
+              {t.veryGoodAt} <span className="text-purple-400 font-semibold">{tool.specialty}</span>
             </p>
           </div>
         </div>

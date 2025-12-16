@@ -206,13 +206,25 @@ export default function Hero({ selectedCategory }: HeroProps) {
                   </>
                 ) : selectedCategory ? (
                   <>
-                    {t.resultsFor} <span className="text-purple-400">{selectedCategory}</span>
+                    {t.resultsFor} <span className="text-purple-400">{
+                      selectedCategory === "Image" ? t.categoryImage :
+                      selectedCategory === "Design" ? t.categoryDesign :
+                      selectedCategory === "Vidéo" ? t.categoryVideo :
+                      selectedCategory === "Rédaction" ? t.categoryWriting :
+                      selectedCategory
+                    }</span>
                   </>
                 ) : null}
               </h3>
               {selectedCategory && (
                 <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
-                  {t.activeFilter} <span className="text-purple-400 font-semibold">{selectedCategory}</span>
+                  {t.activeFilter} <span className="text-purple-400 font-semibold">{
+                    selectedCategory === "Image" ? t.categoryImage :
+                    selectedCategory === "Design" ? t.categoryDesign :
+                    selectedCategory === "Vidéo" ? t.categoryVideo :
+                    selectedCategory === "Rédaction" ? t.categoryWriting :
+                    selectedCategory
+                  }</span>
                 </p>
               )}
               {results.length === 0 ? (
@@ -264,14 +276,18 @@ export default function Hero({ selectedCategory }: HeroProps) {
                           </h4>
                           <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             <span className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold bg-purple-500/20 text-purple-300 rounded-full">
-                              {result.category}
+                              {result.category === "Image" ? t.categoryImage :
+                               result.category === "Design" ? t.categoryDesign :
+                               result.category === "Vidéo" ? t.categoryVideo :
+                               result.category === "Rédaction" ? t.categoryWriting :
+                               result.category}
                             </span>
                             <span className={`px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold rounded-full ${
                               result.type === "Gratuit" 
                                 ? "bg-green-500/20 text-green-300" 
                                 : "bg-yellow-500/20 text-yellow-300"
                             }`}>
-                              {result.type}
+                              {result.type === "Gratuit" ? t.typeFree : t.typePaid}
                             </span>
                           </div>
                         </div>

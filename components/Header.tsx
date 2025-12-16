@@ -22,10 +22,10 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
 
   const categories = [
     { value: null, label: t.allCategories },
-    { value: "Image", label: "Image" },
-    { value: "Design", label: "Design" },
-    { value: "Vidéo", label: "Vidéo" },
-    { value: "Rédaction", label: "Rédaction" },
+    { value: "Image", label: t.categoryImage },
+    { value: "Design", label: t.categoryDesign },
+    { value: "Vidéo", label: t.categoryVideo },
+    { value: "Rédaction", label: t.categoryWriting },
   ];
 
   useEffect(() => {
