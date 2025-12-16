@@ -86,7 +86,7 @@ const generateOptimizedPrompt = (userQuery: string, toolType: string, toolName: 
     
     if (query.includes("article") || query.includes("blog")) {
       task = `Rédige un article complet et détaillé sur ${userQuery}. Minimum 1000 mots, structure claire avec introduction, développement et conclusion.`;
-      context = "L'article doit être informatif, bien structuré avec des sous-titres H2/H3, optimisé SEO avec mots-clés pertinents. Ton professionnel mais accessible.";
+      context = "L&apos;article doit être informatif, bien structuré avec des sous-titres H2/H3, optimisé SEO avec mots-clés pertinents. Ton professionnel mais accessible.";
       references = "Style éditorial professionnel : articles de blogs tech (Medium, TechCrunch). Utilise des exemples concrets, des données si possible, et un ton engageant.";
     } else if (query.includes("pub") || query.includes("marketing") || query.includes("publicité")) {
       task = `Crée un texte publicitaire persuasif pour ${userQuery}. Format court et impactant, call-to-action fort.`;

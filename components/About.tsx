@@ -142,7 +142,7 @@ export default function About({ isOpen, onClose }: AboutProps) {
                   <div className="glass rounded-2xl p-4">
                     <h4 className="text-lg font-bold text-purple-400 mb-2">2. Contexte</h4>
                     <p className="text-gray-300 mb-2">
-                      Ajoutez les détails nécessaires pour que l'IA comprenne précisément ce que vous cherchez.
+                      Ajoutez les détails nécessaires pour que l&apos;IA comprenne précisément ce que vous cherchez.
                     </p>
                     <div className="glass rounded-lg p-3 mt-2">
                       <p className="text-sm text-gray-400 italic">
@@ -219,9 +219,9 @@ export default function About({ isOpen, onClose }: AboutProps) {
                 <h4 className="text-lg font-bold text-white mb-2">Exemple 1 : Rédaction</h4>
                 <div className="glass rounded-lg p-3 mt-2">
                   <pre className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
-{`En tant que rédacteur professionnel, rédige un article de blog de 1000 mots sur l'intelligence artificielle en marketing.
+{`En tant que rédacteur professionnel, rédige un article de blog de 1000 mots sur l&apos;intelligence artificielle en marketing.
 
-Contexte : L'article doit être informatif, bien structuré avec des sous-titres, optimisé SEO avec les mots-clés "IA marketing", "automatisation". Ton professionnel mais accessible.
+Contexte : L&apos;article doit être informatif, bien structuré avec des sous-titres, optimisé SEO avec les mots-clés &quot;IA marketing&quot;, &quot;automatisation&quot;. Ton professionnel mais accessible.
 
 Références : Style éditorial de blogs tech (Medium, TechCrunch). Utilise des exemples concrets et un ton engageant.`}
                   </pre>
@@ -234,7 +234,7 @@ Références : Style éditorial de blogs tech (Medium, TechCrunch). Utilise des 
                   <pre className="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
 {`En tant que designer graphique, crée un logo moderne pour une startup de fintech.
 
-Contexte : Le logo doit être reconnaissable à petite taille, fonctionner en noir et blanc, et refléter l'innovation financière. Format vectoriel.
+Contexte : Le logo doit être reconnaissable à petite taille, fonctionner en noir et blanc, et refléter l&apos;innovation financière. Format vectoriel.
 
 Références : Inspire-toi des logos de Stripe, Revolut. Style épuré, couleurs limitées (bleu et blanc), typographie moderne.`}
                   </pre>
