@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Globe, X } from "lucide-react";
 import About from "./About";
-import LogoAnimated from "./LogoAnimated";
+import LogoSimple from "./LogoSimple";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
@@ -61,12 +61,7 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
               whileHover={{ scale: 1.02 }}
               className="scale-90 sm:scale-100"
             >
-              <div className="sm:hidden">
-                <LogoAnimated size={36} />
-              </div>
-              <div className="hidden sm:block">
-                <LogoAnimated size={44} />
-              </div>
+              <LogoSimple size={36} />
             </motion.div>
             
             <nav className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
