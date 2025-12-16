@@ -341,8 +341,8 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   const totalWidth1 = (cardWidth + gap) * firstHalf.length;
   const totalWidth2 = (cardWidth + gap) * secondHalf.length;
 
-  // Durée beaucoup plus lente (300 secondes = 5 minutes)
-  const duration = 300;
+  // Durée optimisée pour un défilement fluide (60 secondes)
+  const duration = 60;
 
   const renderCard = (tool: typeof aiTools[0], index: number) => {
     const logoUrl = getLogoUrlByName(tool.name);
