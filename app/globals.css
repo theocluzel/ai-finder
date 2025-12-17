@@ -17,41 +17,12 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background: transparent;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0f 100%);
   min-height: 100vh;
 }
 
-/* Un SEUL background global (évite toute “cassure” entre sections) */
 html {
-  background: #0a0a0f;
-}
-
-body {
-  position: relative;
-  background: transparent;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
   background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 25%, #16213e 50%, #0f3460 75%, #0a0a0f 100%);
-  background-size: 400% 400%;
-  animation: gradient 20s ease infinite;
-  pointer-events: none;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 body {
