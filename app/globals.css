@@ -64,7 +64,7 @@ body {
 /* Premium card surface (no visible border, no backdrop blur) */
 .card-surface {
   /* Fond plein uniforme (légèrement différent du background) */
-  background: rgba(255, 255, 255, 0.06);
+  background: #1f2a44;
 
   /* ZÉRO liseré (même à 200%) */
   border: 0 !important;
@@ -87,6 +87,7 @@ body {
 .card-surface:hover {
   /* Hover: uniquement élévation + ombre externe douce (jamais inset) */
   transform: translateY(-2px);
+  background: #233054;
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.24) !important;
 }
 
