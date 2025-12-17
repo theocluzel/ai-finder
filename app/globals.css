@@ -63,15 +63,37 @@ body {
 
 /* Premium card surface (no visible border, no backdrop blur) */
 .card-surface {
+  /* Fond plein uniforme (légèrement différent du background) */
   background: rgba(255, 255, 255, 0.06);
-  border: 0;
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.22),
-    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+
+  /* ZÉRO liseré (même à 200%) */
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important; /* pas d'inset, pas de contour */
+
+  /* Neutraliser tout ring/shadow Tailwind éventuel */
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+
+  /* Pas de blur/backdrop (évite les bords “wireframe”) */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+
+  will-change: transform;
 }
 
 .card-surface:hover {
-  background: rgba(255, 255, 255, 0.075);
+  /* Hover: uniquement élévation + ombre externe douce (jamais inset) */
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.24) !important;
+}
+
+.card-surface:focus,
+.card-surface:focus-visible {
+  outline: 0 !important;
+  box-shadow: none !important;
 }
 
 /* Custom scrollbar */

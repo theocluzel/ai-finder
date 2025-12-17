@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageSquare,
@@ -311,15 +311,6 @@ interface AIToolsCarouselProps {
 
 export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
   const { t, language } = useLanguage();
-
-  // #region agent log
-  useEffect(() => {
-    const el = document.querySelector<HTMLElement>('[data-ai-card="true"]');
-    if (!el) return;
-    const cs = window.getComputedStyle(el);
-    fetch('http://127.0.0.1:7242/ingest/12eb2311-b260-46cc-aed5-0bbfacf741c8',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AIToolsCarousel.tsx:logger',message:'card computed style',data:{borderTopWidth:cs.borderTopWidth,borderRightWidth:cs.borderRightWidth,borderBottomWidth:cs.borderBottomWidth,borderLeftWidth:cs.borderLeftWidth,borderTopColor:cs.borderTopColor,borderRightColor:cs.borderRightColor,borderBottomColor:cs.borderBottomColor,borderLeftColor:cs.borderLeftColor,outlineWidth:cs.outlineWidth,outlineStyle:cs.outlineStyle,outlineColor:cs.outlineColor,boxShadow:cs.boxShadow,backgroundColor:cs.backgroundColor,backgroundImage:cs.backgroundImage},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'border'})}).catch(()=>{});
-  }, []);
-  // #endregion
   
   // Filtrer les outils par catégorie si une catégorie est sélectionnée
   let filteredTools = aiTools;
@@ -371,7 +362,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
 
     return (
       <motion.div
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ y: -2 }}
         data-ai-card="true"
         className="flex-shrink-0 w-56 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 cursor-pointer group relative z-10"
       >

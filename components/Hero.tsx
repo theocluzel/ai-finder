@@ -18,15 +18,6 @@ interface HeroProps {
 export default function Hero({ selectedCategory }: HeroProps) {
   const { t, language } = useLanguage();
   const [logoStatus, setLogoStatus] = useState<Record<string, "loading" | "ok" | "fail">>({});
-
-  // #region agent log
-  useEffect(() => {
-    const el = document.querySelector<HTMLElement>('[data-ai-card="true"]');
-    if (!el) return;
-    const cs = window.getComputedStyle(el);
-    fetch('http://127.0.0.1:7242/ingest/12eb2311-b260-46cc-aed5-0bbfacf741c8',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Hero.tsx:logger',message:'card computed style',data:{borderTopWidth:cs.borderTopWidth,borderRightWidth:cs.borderRightWidth,borderBottomWidth:cs.borderBottomWidth,borderLeftWidth:cs.borderLeftWidth,borderTopColor:cs.borderTopColor,borderRightColor:cs.borderRightColor,borderBottomColor:cs.borderBottomColor,borderLeftColor:cs.borderLeftColor,outlineWidth:cs.outlineWidth,outlineStyle:cs.outlineStyle,outlineColor:cs.outlineColor,boxShadow:cs.boxShadow,backgroundColor:cs.backgroundColor,backgroundImage:cs.backgroundImage},timestamp:Date.now(),sessionId:'debug-session',runId:'run3',hypothesisId:'border'})}).catch(()=>{});
-  }, []);
-  // #endregion
   const [searchResults, setSearchResults] = useState<string | null>(null);
   const [results, setResults] = useState<AITool[]>([]);
   const [allResults, setAllResults] = useState<AITool[]>([]); // Tous les résultats disponibles
@@ -229,6 +220,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                       key={result.name}
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
+                      whileHover={{ y: -2 }}
                       transition={{ delay: index * 0.05 }}
                       data-ai-card="true"
                       className="card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 transition-colors flex flex-col h-auto sm:h-[140px] md:h-auto"
