@@ -404,12 +404,12 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   }
 
   return (
-    <div className="w-full py-6 sm:py-8 md:py-12">
+    <div className="w-full py-6 sm:py-8 md:py-12 carousel-shell">
       {/* Carrousel 1 : Droite vers Gauche */}
-      <div className="overflow-hidden relative mb-8 sm:mb-10 md:mb-12">
+      <div className="overflow-hidden relative mb-8 sm:mb-10 md:mb-12 carousel-viewport">
         <div className="py-2 sm:py-3 md:py-4">
           <motion.div
-            className="flex gap-4 sm:gap-6 md:gap-8"
+            className="flex gap-4 sm:gap-6 md:gap-8 carousel-track"
             animate={{
               x: [0, -totalWidth1],
             }}
@@ -430,10 +430,10 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
       </div>
 
       {/* Carrousel 2 : Gauche vers Droite */}
-      <div className="overflow-hidden relative">
+      <div className="overflow-hidden relative carousel-viewport">
         <div className="py-2 sm:py-3 md:py-4">
           <motion.div
-            className="flex gap-4 sm:gap-6 md:gap-8"
+            className="flex gap-4 sm:gap-6 md:gap-8 carousel-track"
             initial={{ x: -totalWidth2 }}
             animate={{
               x: [-totalWidth2, 0],

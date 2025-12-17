@@ -191,6 +191,38 @@ body {
   }
 }
 
+/* Carousel: remove any global halo layers (no bg/gradient/blur/mask/pseudos) */
+.carousel-shell,
+.carousel-viewport,
+.carousel-track {
+  background: transparent !important;
+  background-image: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  mix-blend-mode: normal !important;
+}
+
+.carousel-shell {
+  isolation: isolate;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.carousel-shell::before,
+.carousel-shell::after,
+.carousel-viewport::before,
+.carousel-viewport::after,
+.carousel-track::before,
+.carousel-track::after {
+  content: none !important;
+}
+
 
 
 
