@@ -124,7 +124,8 @@ export default function Hero({ selectedCategory }: HeroProps) {
             animate={{ opacity: 1, scale: 1 }}
             className="mb-10 sm:mb-12 md:mb-24"
           >
-            <div className="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-8">
+            {/* Wrapper volontairement neutre: pas de border/shadow/blur pour éviter toute “ligne” de séparation */}
+            <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-5 md:p-8 bg-transparent">
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 leading-snug">
                 {searchResults && searchResults.trim() ? (
                   <>
