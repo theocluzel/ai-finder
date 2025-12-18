@@ -213,6 +213,25 @@ body {
   content: none !important;
 }
 
+/* HARD RESET – aucune bordure possible */
+.card-surface,
+.card-surface * {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
 
+/* Neutralisation totale des rings Tailwind */
+.card-surface {
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+}
 
+/* Hover ultra simple, sans illusion */
+.card-surface:hover {
+  transform: translateY(-2px);
+  background-color: #233054;
+}
 
