@@ -363,7 +363,12 @@ export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
                           <textarea
                             value={userRequests[index] || ""}
                             onChange={(e) => setUserRequests(prev => ({ ...prev, [index]: e.target.value }))}
-                            placeholder={language === 'fr' ? 'Ex: Je veux créer une image de...' : 'Ex: I want to create an image of...'}
+                            placeholder={
+                              result.category === "Image" ? t.placeholderImage :
+                              result.category === "Vidéo" ? t.placeholderVideo :
+                              result.category === "Design" ? t.placeholderDesign :
+                              t.placeholderWriting
+                            }
                             className="w-full glass rounded-lg p-2 sm:p-3 text-[11px] sm:text-sm text-white placeholder-gray-500 bg-white/5 border border-white/10 focus:border-purple-500/50 focus:outline-none resize-none mb-2"
                             rows={2}
                           />

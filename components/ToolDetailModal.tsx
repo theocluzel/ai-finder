@@ -109,10 +109,19 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
                   </motion.button>
                 </div>
 
-                {/* Description */}
-                <div className="mb-6">
-                  <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+                {/* Description améliorée */}
+                <div className="mb-6 glass rounded-lg p-4">
+                  <h3 className="text-sm text-gray-400 font-semibold mb-3">
+                    {language === 'fr' ? 'À propos de cet outil :' : 'About this tool:'}
+                  </h3>
+                  <p className="text-gray-200 text-base sm:text-lg leading-relaxed mb-3 font-medium">
                     {getTranslatedDescription(tool.description, language)}
+                  </p>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {language === 'fr' 
+                      ? `Cet outil vous permet de ${getTranslatedDescription(tool.description, language).toLowerCase()}. Pour obtenir un prompt optimisé, décrivez précisément votre projet dans le champ ci-dessous.`
+                      : `This tool allows you to ${getTranslatedDescription(tool.description, language).toLowerCase()}. To get an optimized prompt, describe your project precisely in the field below.`
+                    }
                   </p>
                 </div>
 
@@ -124,7 +133,12 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
                   <textarea
                     value={userRequest}
                     onChange={(e) => setUserRequest(e.target.value)}
-                    placeholder={language === 'fr' ? 'Ex: Je veux créer une image de paysage futuriste...' : 'Ex: I want to create a futuristic landscape image...'}
+                    placeholder={
+                      tool.category === "Image" ? t.placeholderImage :
+                      tool.category === "Vidéo" ? t.placeholderVideo :
+                      tool.category === "Design" ? t.placeholderDesign :
+                      t.placeholderWriting
+                    }
                     className="w-full glass rounded-lg p-4 text-white placeholder-gray-500 bg-white/5 border border-white/10 focus:border-purple-500/50 focus:outline-none resize-none"
                     rows={3}
                   />
