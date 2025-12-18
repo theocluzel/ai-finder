@@ -369,12 +369,16 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
     if (!logoUrl) return null;
     if (status === "fail") return null;
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       // Trouver l'outil correspondant dans aiToolsList
       const foundTool = aiToolsList.find(t => t.name === tool.name);
       if (foundTool) {
         setSelectedTool(foundTool);
         setIsModalOpen(true);
+      } else {
+        // Debug: vérifier pourquoi l'outil n'est pas trouvé
+        console.log("Tool not found:", tool.name, "Available tools:", aiToolsList.map(t => t.name).slice(0, 10));
       }
     };
 

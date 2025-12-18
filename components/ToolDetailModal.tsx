@@ -39,7 +39,7 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
           />
           
           {/* Modal */}
@@ -47,10 +47,10 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-none"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="glass-strong rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div className="glass-strong rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar pointer-events-auto">
               <div className="p-6 sm:p-8">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
