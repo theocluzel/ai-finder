@@ -64,6 +64,7 @@ export const translations = {
     footerText: "Trouvez l'outil d'IA parfait pour vos projets",
     footerDev: "Projet en développement – bientôt plus de fonctionnalités.",
     contactMe: "Me contacter",
+    comingSoon: "Prochainement",
     
     // About Modal
     aboutTitle: "Comment bien prompter ?",
@@ -160,6 +161,7 @@ export const translations = {
     footerText: "Find the perfect AI tool for your projects",
     footerDev: "Project in development – more features coming soon.",
     contactMe: "Contact me",
+    comingSoon: "Coming soon",
     
     // About Modal
     aboutTitle: "How to prompt well?",

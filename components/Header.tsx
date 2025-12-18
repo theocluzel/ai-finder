@@ -291,8 +291,7 @@ export default function Header({ selectedCategory, onCategoryChange, selectedFil
                 whileTap={{ scale: 0.98 }}
                 className="px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base glass rounded-lg text-white hover:bg-white/10 transition-colors"
               >
-                <span className="hidden sm:inline">Prochainement</span>
-                <span className="sm:hidden">Soon</span>
+                {t.comingSoon}
               </motion.button>
             </nav>
           </div>

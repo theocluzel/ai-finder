@@ -36,9 +36,10 @@ import {
   Cpu,
 } from "lucide-react";
 import LogoImage from "./LogoImage";
-import { aiToolsList, getToolsByCategory } from "@/data/aiTools";
+import { aiToolsList, getToolsByCategory, AITool } from "@/data/aiTools";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedDescription } from "@/lib/descriptionTranslations";
+import ToolDetailModal from "./ToolDetailModal";
 
 // Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
 const carouselLogoMapping: Record<string, string> = {
@@ -311,6 +312,8 @@ interface AIToolsCarouselProps {
 
 export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselProps) {
   const { t, language } = useLanguage();
+  const [selectedTool, setSelectedTool] = useState<AITool | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Filtrer les outils par catégorie si une catégorie est sélectionnée
   let filteredTools = aiTools;
@@ -366,9 +369,19 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
     if (!logoUrl) return null;
     if (status === "fail") return null;
 
+    const handleClick = () => {
+      // Trouver l'outil correspondant dans aiToolsList
+      const foundTool = aiToolsList.find(t => t.name === tool.name);
+      if (foundTool) {
+        setSelectedTool(foundTool);
+        setIsModalOpen(true);
+      }
+    };
+
     return (
       <motion.div
         whileHover={{ y: -2 }}
+        onClick={handleClick}
         data-ai-card="true"
         className="flex-shrink-0 w-36 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 cursor-pointer group relative z-10"
       >
@@ -459,6 +472,16 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
           </motion.div>
         </div>
       </div>
+
+      {/* Modal de détails */}
+      <ToolDetailModal
+        tool={selectedTool}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedTool(null);
+        }}
+      />
     </div>
   );
 }
