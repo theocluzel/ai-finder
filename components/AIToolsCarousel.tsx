@@ -331,16 +331,22 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   const firstHalf = filteredTools.slice(0, Math.ceil(filteredTools.length / 2));
   const secondHalf = filteredTools.slice(Math.ceil(filteredTools.length / 2));
 
-  // Dupliquer les outils pour un défilement infini
-  const duplicatedTools1 = [...firstHalf, ...firstHalf];
-  const duplicatedTools2 = [...secondHalf, ...secondHalf];
+  // Dupliquer les outils 3 fois pour un défilement infini sans bord visible
+  // Cela garantit qu'il n'y a jamais de fin visible du track
+  const duplicatedTools1 = [...firstHalf, ...firstHalf, ...firstHalf];
+  const duplicatedTools2 = [...secondHalf, ...secondHalf, ...secondHalf];
 
   // Calculer la largeur totale pour l'animation
   // Utiliser une valeur moyenne qui fonctionne bien sur tous les écrans
   const cardWidth = 240; // Valeur moyenne entre mobile et desktop
   const gap = 24; // gap-4 sm:gap-6
-  const totalWidth1 = (cardWidth + gap) * firstHalf.length;
-  const totalWidth2 = (cardWidth + gap) * secondHalf.length;
+  const segmentWidth1 = (cardWidth + gap) * firstHalf.length;
+  const segmentWidth2 = (cardWidth + gap) * secondHalf.length;
+  
+  // L'animation boucle sur un seul segment (1/3 du contenu total)
+  // Quand elle atteint la fin du segment, elle revient invisiblement au début
+  const totalWidth1 = segmentWidth1;
+  const totalWidth2 = segmentWidth2;
 
   // Durée de base (300 secondes = 5 minutes) pour tous les outils
   const baseDuration = 300;
@@ -421,9 +427,12 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 ease: "linear",
               },
             }}
+            style={{
+              width: `${duplicatedTools1.length * (cardWidth + gap)}px`,
+            }}
           >
             {duplicatedTools1.map((tool, index) => (
-              <ValidatedCarouselCard key={`${tool.name}-${index}`} tool={tool} index={index} />
+              <ValidatedCarouselCard key={`carousel1-${tool.name}-${index}`} tool={tool} index={index} />
             ))}
           </motion.div>
         </div>
@@ -446,9 +455,12 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 ease: "linear",
               },
             }}
+            style={{
+              width: `${duplicatedTools2.length * (cardWidth + gap)}px`,
+            }}
           >
             {duplicatedTools2.map((tool, index) => (
-              <ValidatedCarouselCard key={`${tool.name}-${index}`} tool={tool} index={index} />
+              <ValidatedCarouselCard key={`carousel2-${tool.name}-${index}`} tool={tool} index={index} />
             ))}
           </motion.div>
         </div>
