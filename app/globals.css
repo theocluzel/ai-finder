@@ -183,7 +183,6 @@ body {
 
 /* Carousel: remove any global halo layers (no bg/gradient/blur/mask/pseudos) */
 .carousel-shell,
-.carousel-viewport,
 .carousel-track {
   background: transparent !important;
   background-image: none !important;
@@ -193,6 +192,16 @@ body {
   mask-image: none !important;
   -webkit-mask-image: none !important;
   mix-blend-mode: normal !important;
+}
+
+.carousel-viewport {
+  background: transparent !important;
+  background-image: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+  /* mask-image autorisé pour effet fade */
 }
 
 .carousel-shell {
@@ -213,29 +222,30 @@ body {
   content: none !important;
 }
 
-/* Masques de dégradé pour effet fade sur les bords du carousel */
-.carousel-fade-left {
-  background: linear-gradient(
+/* Masque de transparence progressive pour effet fade sur les bords du carousel */
+.carousel-viewport.carousel-fade-mask {
+  mask-image: linear-gradient(
     to right,
-    #0a0a0f 0%,
-    rgba(10, 10, 15, 0.98) 15%,
-    rgba(10, 10, 15, 0.85) 35%,
-    rgba(10, 10, 15, 0.5) 60%,
-    rgba(10, 10, 15, 0.2) 85%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 8%,
+    rgba(0, 0, 0, 0.7) 15%,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 0.7) 85%,
+    rgba(0, 0, 0, 0.3) 92%,
     transparent 100%
-  );
-}
-
-.carousel-fade-right {
-  background: linear-gradient(
-    to left,
-    #0a0a0f 0%,
-    rgba(10, 10, 15, 0.98) 15%,
-    rgba(10, 10, 15, 0.85) 35%,
-    rgba(10, 10, 15, 0.5) 60%,
-    rgba(10, 10, 15, 0.2) 85%,
+  ) !important;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 8%,
+    rgba(0, 0, 0, 0.7) 15%,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 0.7) 85%,
+    rgba(0, 0, 0, 0.3) 92%,
     transparent 100%
-  );
+  ) !important;
 }
 
 /* HARD RESET – aucune bordure possible */

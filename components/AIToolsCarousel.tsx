@@ -412,11 +412,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
   return (
     <div className="w-full py-6 sm:py-8 md:py-12 carousel-shell">
       {/* Carrousel 1 : Droite vers Gauche */}
-      <div className="overflow-hidden relative mb-8 sm:mb-10 md:mb-12 carousel-viewport">
-        {/* Masque de dégradé gauche */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 md:w-48 z-20 pointer-events-none carousel-fade-left" />
-        {/* Masque de dégradé droit */}
-        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 md:w-48 z-20 pointer-events-none carousel-fade-right" />
+      <div className="overflow-hidden relative mb-8 sm:mb-10 md:mb-12 carousel-viewport carousel-fade-mask">
         <div className="py-2 sm:py-3 md:py-4">
           <motion.div
             className="flex gap-4 sm:gap-6 md:gap-8 carousel-track"
@@ -440,11 +436,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
       </div>
 
       {/* Carrousel 2 : Gauche vers Droite */}
-      <div className="overflow-hidden relative carousel-viewport">
-        {/* Masque de dégradé gauche */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-32 md:w-48 z-20 pointer-events-none carousel-fade-left" />
-        {/* Masque de dégradé droit */}
-        <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-32 md:w-48 z-20 pointer-events-none carousel-fade-right" />
+      <div className="overflow-hidden relative carousel-viewport carousel-fade-mask">
         <div className="py-2 sm:py-3 md:py-4">
           <motion.div
             className="flex gap-4 sm:gap-6 md:gap-8 carousel-track"
