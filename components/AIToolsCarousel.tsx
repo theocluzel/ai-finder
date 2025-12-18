@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   MessageSquare,
@@ -393,8 +393,8 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
     ? (baseDuration * filteredTools.length) / totalToolsCount
     : baseDuration;
 
-  function ValidatedCarouselCard({ tool, index }: { tool: (typeof aiToolsBase)[number]; index: number }) {
-    const logoUrl = getLogoUrlByName(tool.name);
+  const ValidatedCarouselCard = memo(function ValidatedCarouselCard({ tool, index }: { tool: (typeof aiToolsBase)[number]; index: number }) {
+    const logoUrl = useMemo(() => getLogoUrlByName(tool.name), [tool.name]);
     const [status, setStatus] = useState<"loading" | "ok" | "fail">("loading");
 
     // Si pas d'URL => on ne rend pas la carte (règle produit)
@@ -441,6 +441,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
         onClick={handleClick}
         data-ai-card="true"
         className="flex-shrink-0 w-36 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 cursor-pointer group relative z-10"
+        style={{ willChange: "transform" }}
       >
         <div className="flex flex-col items-center text-center space-y-1.5 sm:space-y-3 md:space-y-4">
           <div className="flex items-center justify-center relative">
@@ -477,7 +478,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
         </div>
       </motion.div>
     );
-  }
+  });
 
   return (
     <div className="w-full py-6 sm:py-8 md:py-12 carousel-shell">
@@ -496,6 +497,10 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 duration: duration,
                 ease: "linear",
               },
+            }}
+            style={{
+              willChange: "transform",
+              transform: "translateZ(0)",
             }}
           >
             {duplicatedTools1.map((tool, index) => (
@@ -521,6 +526,10 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 duration: duration,
                 ease: "linear",
               },
+            }}
+            style={{
+              willChange: "transform",
+              transform: "translateZ(0)",
             }}
           >
             {duplicatedTools2.map((tool, index) => (

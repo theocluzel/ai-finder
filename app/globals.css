@@ -207,6 +207,32 @@ body {
   mix-blend-mode: normal !important;
 }
 
+/* Optimisations GPU pour le carousel */
+.carousel-track {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style paint;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Force l'accélération GPU */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  /* Réduit les re-renders */
+  isolation: isolate;
+}
+
+/* Optimisation des cartes dans le carousel */
+.carousel-track [data-ai-card="true"] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
 .carousel-viewport {
   background: transparent !important;
   background-image: none !important;
