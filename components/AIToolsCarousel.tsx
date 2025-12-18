@@ -370,9 +370,9 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
       <motion.div
         whileHover={{ y: -2 }}
         data-ai-card="true"
-        className="flex-shrink-0 w-56 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 cursor-pointer group relative z-10"
+        className="flex-shrink-0 w-36 sm:w-64 md:w-80 card-surface rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 cursor-pointer group relative z-10"
       >
-        <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3 md:space-y-4">
+        <div className="flex flex-col items-center text-center space-y-1.5 sm:space-y-3 md:space-y-4">
           <div className="flex items-center justify-center relative">
             {/* Skeleton neutre tant que le logo n'est pas validé */}
             {status === "loading" && (
@@ -381,7 +381,7 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
             <LogoImage
               src={logoUrl}
               alt={tool.name}
-              size="md"
+              size="sm"
               className="sm:hidden shadow-none"
               onStatusChange={(s) => setStatus(s)}
             />
@@ -394,10 +394,10 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
             />
           </div>
           <div>
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 sm:mb-2 leading-snug">
+            <h3 className="text-xs sm:text-lg md:text-xl font-bold text-white mb-0.5 sm:mb-2 leading-tight sm:leading-snug">
               {tool.name}
             </h3>
-            <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-snug">
+            <p className="text-[10px] sm:text-sm md:text-base text-gray-300 leading-tight sm:leading-snug">
               {t.veryGoodAt}{" "}
               <span className="text-purple-400 font-semibold">
                 {getTranslatedDescription(tool.specialty, language)}

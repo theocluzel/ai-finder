@@ -166,7 +166,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                   <p className="text-gray-300 text-sm sm:text-base mb-4 sm:mb-6">
                     {results.length} {results.length > 1 ? t.suggestionsPlural : t.suggestions} {results.length > 1 ? t.possiblePlural : t.possible} :
                   </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 {results.map((result, index) => {
                   const optimizedPrompt = isSearchMode 
                     ? generateOptimizedPrompt(searchResults || "", result.category, result.name, language)
@@ -183,9 +183,9 @@ export default function Hero({ selectedCategory }: HeroProps) {
                       <div
                         key={`${result.name}-skeleton`}
                         data-ai-card="true"
-                        className="card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 flex flex-col h-auto sm:h-[140px] md:h-auto"
+                        className="card-surface rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 flex flex-col h-auto sm:h-[140px] md:h-auto"
                       >
-                        <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div className="flex items-start gap-2 sm:gap-4 mb-2 sm:mb-4">
                           <div className="relative w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-white/5 animate-pulse overflow-hidden">
                             {/* On monte le LogoImage en invisible pour valider le logo sans afficher de placeholder */}
                             <div className="opacity-0">
@@ -224,10 +224,10 @@ export default function Hero({ selectedCategory }: HeroProps) {
                       whileHover={{ y: -2 }}
                       transition={{ delay: index * 0.05 }}
                       data-ai-card="true"
-                      className="card-surface rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 transition-colors flex flex-col h-auto sm:h-[140px] md:h-auto"
+                      className="card-surface rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 transition-colors flex flex-col h-auto sm:h-[140px] md:h-auto"
                     >
                       {/* Logo et en-tête */}
-                      <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+                      <div className="flex items-start gap-2 sm:gap-4 mb-2 sm:mb-4">
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.2 }}
@@ -249,18 +249,18 @@ export default function Hero({ selectedCategory }: HeroProps) {
                           />
                         </motion.div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-base sm:text-lg font-bold text-white mb-1.5 sm:mb-2 leading-snug">
+                          <h4 className="text-sm sm:text-lg font-bold text-white mb-1 sm:mb-2 leading-tight sm:leading-snug">
                           {result.name}
                         </h4>
-                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                            <span className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold bg-purple-500/20 text-purple-300 rounded-full">
+                          <div className="flex flex-wrap gap-1 sm:gap-2">
+                            <span className="px-1.5 sm:px-3 py-0.5 text-[10px] sm:text-xs font-semibold bg-purple-500/20 text-purple-300 rounded-full">
                               {result.category === "Image" ? t.categoryImage :
                                result.category === "Design" ? t.categoryDesign :
                                result.category === "Vidéo" ? t.categoryVideo :
                                result.category === "Rédaction" ? t.categoryWriting :
                                result.category}
                             </span>
-                            <span className={`px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold rounded-full ${
+                            <span className={`px-1.5 sm:px-3 py-0.5 text-[10px] sm:text-xs font-semibold rounded-full ${
                               result.type === "Gratuit" 
                                 ? "bg-green-500/20 text-green-300" 
                                 : "bg-yellow-500/20 text-yellow-300"
@@ -270,7 +270,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
                           </div>
                         </div>
                       </div>
-                      <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 leading-snug">
+                      <p className="text-gray-400 text-[11px] sm:text-sm mb-2 sm:mb-4 line-clamp-2 leading-tight sm:leading-snug">
                         {getTranslatedDescription(result.description, language)}
                       </p>
                       
