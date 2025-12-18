@@ -213,6 +213,31 @@ body {
   content: none !important;
 }
 
+/* Masques de dégradé pour effet fade sur les bords du carousel */
+.carousel-fade-left {
+  background: linear-gradient(
+    to right,
+    #0a0a0f 0%,
+    rgba(10, 10, 15, 0.98) 15%,
+    rgba(10, 10, 15, 0.85) 35%,
+    rgba(10, 10, 15, 0.5) 60%,
+    rgba(10, 10, 15, 0.2) 85%,
+    transparent 100%
+  );
+}
+
+.carousel-fade-right {
+  background: linear-gradient(
+    to left,
+    #0a0a0f 0%,
+    rgba(10, 10, 15, 0.98) 15%,
+    rgba(10, 10, 15, 0.85) 35%,
+    rgba(10, 10, 15, 0.5) 60%,
+    rgba(10, 10, 15, 0.2) 85%,
+    transparent 100%
+  );
+}
+
 /* HARD RESET – aucune bordure possible */
 .card-surface * {
   border: none !important;
