@@ -10,13 +10,17 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface HeaderProps {
   selectedCategory?: string;
   onCategoryChange?: (category: string | null) => void;
+  selectedFilter?: string | null;
+  onFilterChange?: (filter: string | null) => void;
 }
 
-export default function Header({ selectedCategory, onCategoryChange }: HeaderProps) {
+export default function Header({ selectedCategory, onCategoryChange, selectedFilter, onFilterChange }: HeaderProps) {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
   const { language, setLanguage, t } = useLanguage();
 
@@ -33,6 +37,9 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target as Node)) {
+        setIsFilterDropdownOpen(false);
+      }
       if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
         setIsLangDropdownOpen(false);
       }
@@ -45,7 +52,21 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
   const handleCategorySelect = (category: string | null) => {
     onCategoryChange?.(category);
     setIsDropdownOpen(false);
+    // Réinitialiser le filtre secondaire quand on change de catégorie
+    onFilterChange?.(null);
   };
+
+  const handleFilterSelect = (filter: string | null) => {
+    onFilterChange?.(filter);
+    setIsFilterDropdownOpen(false);
+  };
+
+  const filters = [
+    { value: null, label: t.allFilters },
+    { value: "free", label: t.typeFree },
+    { value: "paid", label: t.typePaid },
+    { value: "topRated", label: t.topRated },
+  ];
 
   return (
     <>
@@ -134,6 +155,73 @@ export default function Header({ selectedCategory, onCategoryChange }: HeaderPro
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* Filtres secondaires - seulement visible quand une catégorie est sélectionnée */}
+              {selectedCategory && (
+                <div className="relative" ref={filterDropdownRef}>
+                  <div className="flex items-center gap-1.5">
+                    <motion.button
+                      onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm md:text-base glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1 sm:gap-2 ${
+                        selectedFilter ? 'bg-purple-500/20' : ''
+                      }`}
+                    >
+                      <span className="hidden sm:inline">
+                        {selectedFilter ? filters.find(f => f.value === selectedFilter)?.label : t.allFilters}
+                      </span>
+                      <span className="sm:hidden">Filtre</span>
+                      <ChevronDown 
+                        className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${isFilterDropdownOpen ? 'rotate-180' : ''}`} 
+                      />
+                    </motion.button>
+                    
+                    {/* Bouton pour enlever le filtre secondaire */}
+                    {selectedFilter && (
+                      <motion.button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFilterSelect(null);
+                        }}
+                        whileHover={{ scale: 1.15, backgroundColor: "rgba(239, 68, 68, 0.2)" }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-1.5 sm:p-2 glass rounded-lg text-red-300 hover:text-red-200 hover:bg-red-500/20 transition-all flex items-center justify-center border border-red-500/30"
+                        title={t.removeFilter}
+                        aria-label={t.removeFilter}
+                      >
+                        <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} />
+                      </motion.button>
+                    )}
+                  </div>
+
+                  <AnimatePresence>
+                    {isFilterDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 mt-2 w-48 sm:w-56 glass-strong rounded-xl overflow-hidden shadow-xl z-50"
+                      >
+                        {filters.map((filter) => (
+                          <button
+                            key={filter.value || "all"}
+                            onClick={() => handleFilterSelect(filter.value)}
+                            className={`w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm transition-colors ${
+                              (!selectedFilter && !filter.value) || selectedFilter === filter.value
+                                ? "bg-purple-500/20 text-purple-300"
+                                : "text-gray-300 hover:bg-white/10 hover:text-white"
+                            }`}
+                          >
+                            {filter.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
 
               {/* Sélecteur de langue */}
               <div className="relative" ref={langDropdownRef}>

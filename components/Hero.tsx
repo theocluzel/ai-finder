@@ -13,9 +13,10 @@ import { getTranslatedDescription } from "@/lib/descriptionTranslations";
 
 interface HeroProps {
   selectedCategory?: string;
+  selectedFilter?: string | null;
 }
 
-export default function Hero({ selectedCategory }: HeroProps) {
+export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
   const { t, language } = useLanguage();
   const [logoStatus, setLogoStatus] = useState<Record<string, "loading" | "ok" | "fail">>({});
   const [searchResults, setSearchResults] = useState<string | null>(null);
@@ -37,17 +38,40 @@ export default function Hero({ selectedCategory }: HeroProps) {
     }, 500);
   };
 
-  // Relancer la recherche quand la catégorie change
+  // Fonction pour appliquer les filtres secondaires
+  const applyFilters = (tools: AITool[]): AITool[] => {
+    let filtered = [...tools];
+    
+    // Filtrer par type (Gratuit/Payant)
+    if (selectedFilter === "free") {
+      filtered = filtered.filter(tool => tool.type === "Gratuit");
+    } else if (selectedFilter === "paid") {
+      filtered = filtered.filter(tool => tool.type === "Payant");
+    }
+    
+    // Filtrer par "top rated" (pour l'instant, on prend les premiers outils de la liste)
+    // TODO: Implémenter un vrai système de notation plus tard
+    if (selectedFilter === "topRated") {
+      // Pour l'instant, on garde tous les outils (on peut ajouter un système de notation plus tard)
+      // On pourrait trier par popularité ou autre critère
+    }
+    
+    return filtered;
+  };
+
+  // Relancer la recherche quand la catégorie ou le filtre change
   useEffect(() => {
     if (searchResults && searchResults.trim()) {
       // Si on a une recherche, filtrer les résultats
-      const searchResultsData = searchTools(searchResults, selectedCategory);
+      let searchResultsData = searchTools(searchResults, selectedCategory);
+      searchResultsData = applyFilters(searchResultsData);
       setAllResults(searchResultsData);
       setResults(searchResultsData.slice(0, displayedCount));
       setDisplayedCount(9);
     } else if (selectedCategory) {
       // Si on a juste une catégorie sélectionnée sans recherche, afficher les outils de cette catégorie
-      const categoryTools = getToolsByCategory(selectedCategory);
+      let categoryTools = getToolsByCategory(selectedCategory);
+      categoryTools = applyFilters(categoryTools);
       setAllResults(categoryTools);
       setResults(categoryTools.slice(0, displayedCount));
       setDisplayedCount(9);
@@ -62,7 +86,7 @@ export default function Hero({ selectedCategory }: HeroProps) {
       setGeneratedPrompts({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedFilter]);
 
   const handleCopyPrompt = (prompt: string, index: number) => {
     navigator.clipboard.writeText(prompt);

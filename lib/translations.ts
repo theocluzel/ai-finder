@@ -13,6 +13,8 @@ export const translations = {
     categoryWriting: "Rédaction",
     typeFree: "Gratuit",
     typePaid: "Payant",
+    allFilters: "Tous les filtres",
+    topRated: "Les mieux notées",
     
     // Hero
     heroTitle1: "Dites ce que vous voulez faire.",
@@ -107,6 +109,8 @@ export const translations = {
     categoryWriting: "Writing",
     typeFree: "Free",
     typePaid: "Paid",
+    allFilters: "All filters",
+    topRated: "Top rated",
     
     // Hero
     heroTitle1: "Tell us what you want to do.",
