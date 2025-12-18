@@ -41,6 +41,38 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslatedDescription } from "@/lib/descriptionTranslations";
 import ToolDetailModal from "./ToolDetailModal";
 
+// Mapping des outils du carousel vers leurs informations complètes (pour ceux qui ne sont pas dans aiToolsList)
+const carouselToolMapping: Record<string, Partial<AITool>> = {
+  "Claude": { name: "Claude", category: "Rédaction", type: "Gratuit", description: "analyse de documents et stratégie business", url: "https://claude.ai" },
+  "Notion AI": { name: "Notion AI", category: "Rédaction", type: "Payant", description: "gestion de projets et organisation", url: "https://notion.so" },
+  "Zapier": { name: "Zapier", category: "Rédaction", type: "Payant", description: "automatisation de workflows entreprise", url: "https://zapier.com" },
+  "Make": { name: "Make", category: "Rédaction", type: "Payant", description: "automatisation de processus métier", url: "https://make.com" },
+  "Jasper": { name: "Jasper", category: "Rédaction", type: "Payant", description: "rédaction marketing et stratégie", url: "https://jasper.ai" },
+  "Surfer": { name: "Surfer", category: "Rédaction", type: "Payant", description: "analyse SEO et optimisation contenu", url: "https://surfer.ai" },
+  "Frase AI": { name: "Frase AI", category: "Rédaction", type: "Payant", description: "recherche et analyse de contenu SEO", url: "https://frase.io" },
+  "Growthbar": { name: "Growthbar", category: "Rédaction", type: "Payant", description: "analyse SEO et stratégie blogging", url: "https://growthbar.seo" },
+  "QuickBooks AI": { name: "QuickBooks AI", category: "Rédaction", type: "Payant", description: "gestion comptable automatisée", url: "https://quickbooks.intuit.com" },
+  "Xero": { name: "Xero", category: "Rédaction", type: "Payant", description: "comptabilité et facturation intelligente", url: "https://xero.com" },
+  "Plaid": { name: "Plaid", category: "Rédaction", type: "Payant", description: "analyse financière et transactions", url: "https://plaid.com" },
+  "Klarity": { name: "Klarity", category: "Rédaction", type: "Payant", description: "analyse de contrats et documents", url: "https://klarity.com" },
+  "Salesforce Einstein": { name: "Salesforce Einstein", category: "Rédaction", type: "Payant", description: "gestion CRM et prédictions ventes", url: "https://salesforce.com" },
+  "HubSpot": { name: "HubSpot", category: "Rédaction", type: "Payant", description: "automatisation marketing et CRM", url: "https://hubspot.com" },
+  "Intercom": { name: "Intercom", category: "Rédaction", type: "Payant", description: "support client automatisé", url: "https://intercom.com" },
+  "Drift": { name: "Drift", category: "Rédaction", type: "Payant", description: "chatbots et qualification de leads", url: "https://drift.com" },
+  "Crayon": { name: "Crayon", category: "Rédaction", type: "Payant", description: "veille concurrentielle et analyse marché", url: "https://crayon.co" },
+  "Brandwatch": { name: "Brandwatch", category: "Rédaction", type: "Payant", description: "analyse de sentiment et social listening", url: "https://brandwatch.com" },
+  "Sprout Social": { name: "Sprout Social", category: "Rédaction", type: "Payant", description: "analyse réseaux sociaux et engagement", url: "https://sproutsocial.com" },
+  "BuzzSumo": { name: "BuzzSumo", category: "Rédaction", type: "Payant", description: "analyse de contenu viral et tendances", url: "https://buzzsumo.com" },
+  "Otter.ai": { name: "Otter.ai", category: "Rédaction", type: "Payant", description: "transcription et prise de notes automatique", url: "https://otter.ai" },
+  "Fireflies": { name: "Fireflies", category: "Rédaction", type: "Payant", description: "analyse de réunions et résumés", url: "https://fireflies.ai" },
+  "Calendly AI": { name: "Calendly AI", category: "Rédaction", type: "Payant", description: "planification de rendez-vous intelligente", url: "https://calendly.com" },
+  "Motion": { name: "Motion", category: "Rédaction", type: "Payant", description: "planification de tâches optimisée", url: "https://motion.app" },
+  "Reclaim": { name: "Reclaim", category: "Rédaction", type: "Payant", description: "optimisation de calendrier et planning", url: "https://reclaim.ai" },
+  "Superhuman": { name: "Superhuman", category: "Rédaction", type: "Payant", description: "gestion email intelligente", url: "https://superhuman.com" },
+  "SaneBox": { name: "SaneBox", category: "Rédaction", type: "Payant", description: "organisation et tri automatique d'emails", url: "https://sanebox.com" },
+  "Boomerang": { name: "Boomerang", category: "Rédaction", type: "Payant", description: "planification et rappels d'emails", url: "https://boomerangapp.com" },
+};
+
 // Mapping spécial pour les outils du carrousel qui ne sont pas dans la liste principale
 const carouselLogoMapping: Record<string, string> = {
   "ChatGPT": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
@@ -372,13 +404,34 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       // Trouver l'outil correspondant dans aiToolsList
-      const foundTool = aiToolsList.find(t => t.name === tool.name);
+      let foundTool = aiToolsList.find(t => t.name === tool.name);
+      
+      // Si l'outil n'est pas dans la liste principale, utiliser le mapping
+      if (!foundTool && carouselToolMapping[tool.name]) {
+        const mapped = carouselToolMapping[tool.name];
+        foundTool = {
+          name: mapped.name || tool.name,
+          category: mapped.category || "Image",
+          type: mapped.type || "Gratuit",
+          description: mapped.description || tool.specialty,
+          url: mapped.url || `https://www.google.com/search?q=${encodeURIComponent(tool.name + " AI")}`
+        } as AITool;
+      }
+      
+      // Si toujours pas trouvé, créer un outil basique
+      if (!foundTool) {
+        foundTool = {
+          name: tool.name,
+          category: "Image" as const,
+          type: "Gratuit" as const,
+          description: tool.specialty,
+          url: `https://www.google.com/search?q=${encodeURIComponent(tool.name + " AI")}`
+        };
+      }
+      
       if (foundTool) {
         setSelectedTool(foundTool);
         setIsModalOpen(true);
-      } else {
-        // Debug: vérifier pourquoi l'outil n'est pas trouvé
-        console.log("Tool not found:", tool.name, "Available tools:", aiToolsList.map(t => t.name).slice(0, 10));
       }
     };
 
