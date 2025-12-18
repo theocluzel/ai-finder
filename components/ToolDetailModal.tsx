@@ -18,15 +18,32 @@ interface ToolDetailModalProps {
 export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailModalProps) {
   const { t, language } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const [userRequest, setUserRequest] = useState("");
+  const [generatedPrompt, setGeneratedPrompt] = useState<string | null>(null);
 
   if (!tool) return null;
 
-  const prompt = generateOptimizedPrompt("", tool.category, tool.name, language);
+  const handleGeneratePrompt = () => {
+    if (userRequest.trim()) {
+      const prompt = generateOptimizedPrompt(userRequest, tool.category, tool.name, language);
+      setGeneratedPrompt(prompt);
+    }
+  };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(prompt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (generatedPrompt) {
+      navigator.clipboard.writeText(generatedPrompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  // Réinitialiser quand le modal s'ouvre
+  const handleClose = () => {
+    setUserRequest("");
+    setGeneratedPrompt(null);
+    setCopied(false);
+    onClose();
   };
 
   return (
@@ -38,7 +55,7 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
           />
           
@@ -83,7 +100,7 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
                     </div>
                   </div>
                   <motion.button
-                    onClick={onClose}
+                    onClick={handleClose}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="p-2 glass rounded-lg text-gray-400 hover:text-white transition-colors"
@@ -99,53 +116,99 @@ export default function ToolDetailModal({ tool, isOpen, onClose }: ToolDetailMod
                   </p>
                 </div>
 
-                {/* Prompt optimisé */}
+                {/* Champ de saisie pour la demande de l'utilisateur */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <p className="text-sm text-gray-400 font-semibold">{t.optimizedPrompt}</p>
-                    <motion.span
-                      animate={{ opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-2 h-2 bg-green-400 rounded-full"
-                    />
+                  <label className="block text-sm text-gray-400 font-semibold mb-2">
+                    {language === 'fr' ? 'Décrivez ce que vous voulez faire :' : 'Describe what you want to do:'}
+                  </label>
+                  <textarea
+                    value={userRequest}
+                    onChange={(e) => setUserRequest(e.target.value)}
+                    placeholder={language === 'fr' ? 'Ex: Je veux créer une image de paysage futuriste...' : 'Ex: I want to create a futuristic landscape image...'}
+                    className="w-full glass rounded-lg p-4 text-white placeholder-gray-500 bg-white/5 border border-white/10 focus:border-purple-500/50 focus:outline-none resize-none"
+                    rows={3}
+                  />
+                  <motion.button
+                    onClick={handleGeneratePrompt}
+                    disabled={!userRequest.trim()}
+                    whileHover={{ scale: userRequest.trim() ? 1.02 : 1 }}
+                    whileTap={{ scale: userRequest.trim() ? 0.98 : 1 }}
+                    className={`mt-3 w-full px-4 py-3 rounded-lg font-semibold transition-colors ${
+                      userRequest.trim()
+                        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+                        : "bg-gray-500/20 text-gray-500 cursor-not-allowed"
+                    }`}
+                  >
+                    {t.generatePrompt}
+                  </motion.button>
+                </div>
+
+                {/* Prompt optimisé - affiché seulement après génération */}
+                {generatedPrompt && (
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <p className="text-sm text-gray-400 font-semibold">{t.optimizedPrompt}</p>
+                      <motion.span
+                        animate={{ opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-2 h-2 bg-green-400 rounded-full"
+                      />
+                    </div>
+                    <div className="glass rounded-lg p-4 mb-3">
+                      <pre className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
+                        {generatedPrompt}
+                      </pre>
+                    </div>
+                    <div className="flex gap-3">
+                      <motion.button
+                        onClick={handleCopy}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-colors"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-4 h-4" />
+                            {t.copied}
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4" />
+                            {t.copyPrompt}
+                          </>
+                        )}
+                      </motion.button>
+                      <motion.a
+                        href={tool.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        {t.visitSite}
+                      </motion.a>
+                    </div>
                   </div>
-                  <div className="glass rounded-lg p-4 mb-3">
-                    <pre className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
-                      {prompt}
-                    </pre>
-                  </div>
-                  <div className="flex gap-3">
-                    <motion.button
-                      onClick={handleCopy}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-colors"
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="w-4 h-4" />
-                          {t.copied}
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" />
-                          {t.copyPrompt}
-                        </>
-                      )}
-                    </motion.button>
+                )}
+
+                {/* Bouton visiter le site - toujours visible */}
+                {!generatedPrompt && (
+                  <div className="mb-6">
                     <motion.a
                       href={tool.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
+                      className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
                     >
                       <ExternalLink className="w-4 h-4" />
                       {t.visitSite}
                     </motion.a>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </motion.div>
