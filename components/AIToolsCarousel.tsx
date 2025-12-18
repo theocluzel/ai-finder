@@ -427,9 +427,6 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 ease: "linear",
               },
             }}
-            style={{
-              width: `${duplicatedTools1.length * (cardWidth + gap)}px`,
-            }}
           >
             {duplicatedTools1.map((tool, index) => (
               <ValidatedCarouselCard key={`carousel1-${tool.name}-${index}`} tool={tool} index={index} />
@@ -454,9 +451,6 @@ export default function AIToolsCarousel({ selectedCategory }: AIToolsCarouselPro
                 duration: duration,
                 ease: "linear",
               },
-            }}
-            style={{
-              width: `${duplicatedTools2.length * (cardWidth + gap)}px`,
             }}
           >
             {duplicatedTools2.map((tool, index) => (

@@ -373,27 +373,30 @@ export default function Hero({ selectedCategory }: HeroProps) {
           </motion.div>
         )}
 
-        {/* AI Tools Carousel - seulement à l'accueil (pas dans les catégories) */}
-        {!selectedCategory && (
-          <div className="mb-10 sm:mb-12 md:mb-24">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+      </div>
+
+      {/* AI Tools Carousel - seulement à l'accueil (pas dans les catégories) - pleine largeur */}
+      {!selectedCategory && (
+        <div className="w-full mb-10 sm:mb-12 md:mb-24">
+          <div className="container mx-auto max-w-6xl px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="text-center mb-6 sm:mb-8"
-          >
+            >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5 sm:mb-2 leading-snug">
                 {t.discoverTools}
-            </h2>
+              </h2>
               <p className="text-sm sm:text-base text-gray-400 leading-snug">
                 {t.exploreSelection}
-            </p>
-          </motion.div>
-            <AIToolsCarousel selectedCategory={selectedCategory} />
+              </p>
+            </motion.div>
+          </div>
+          <AIToolsCarousel selectedCategory={selectedCategory} />
         </div>
-        )}
-      </div>
+      )}
     </main>
   );
 }
