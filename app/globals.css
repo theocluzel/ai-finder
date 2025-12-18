@@ -235,6 +235,31 @@ body {
   content: none !important;
 }
 
+/* Optimisations performance mobile uniquement */
+@media (max-width: 640px) {
+  .carousel-track {
+    /* Accélération GPU légère pour mobile */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    /* Réduire les re-calculs */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  .carousel-viewport {
+    /* Isolation pour réduire les re-renders */
+    contain: layout style paint;
+  }
+  
+  /* Optimiser les cartes dans le carousel sur mobile */
+  .carousel-track [data-ai-card="true"] {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
 /* Masque de transparence progressive pour effet fade sur les bords du carousel */
 .carousel-viewport.carousel-fade-mask {
   mask-image: linear-gradient(
