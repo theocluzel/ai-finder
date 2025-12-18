@@ -25,11 +25,13 @@ export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
   const [displayedCount, setDisplayedCount] = useState(9); // Nombre de résultats affichés
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [generatedPrompts, setGeneratedPrompts] = useState<Record<number, string>>({}); // Prompts générés pour chaque index
+  const [userRequests, setUserRequests] = useState<Record<number, string>>({}); // Demandes de l'utilisateur pour chaque carte
 
   const handleSearch = (query: string) => {
     setSearchResults(query);
     setDisplayedCount(9);
     setGeneratedPrompts({});
+    setUserRequests({});
     // Rechercher dans la liste complète des outils
     setTimeout(() => {
       const searchResultsData = searchTools(query, selectedCategory);
@@ -68,6 +70,7 @@ export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
       setAllResults(searchResultsData);
       setResults(searchResultsData.slice(0, displayedCount));
       setDisplayedCount(9);
+      setUserRequests({});
     } else if (selectedCategory) {
       // Si on a juste une catégorie sélectionnée sans recherche, afficher les outils de cette catégorie
       let categoryTools = getToolsByCategory(selectedCategory);
@@ -95,8 +98,9 @@ export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
   };
 
   const handleGeneratePrompt = (result: AITool, index: number) => {
+    const userRequest = userRequests[index] || "";
     const prompt = generateOptimizedPrompt(
-      selectedCategory || "", 
+      userRequest, 
       result.category, 
       result.name, 
       language
@@ -352,15 +356,32 @@ export default function Hero({ selectedCategory, selectedFilter }: HeroProps) {
                         </motion.button>
                       </div>
                       ) : (
-                        <motion.button
-                          onClick={() => handleGeneratePrompt(result, index)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full mb-3 sm:mb-4 px-3 py-2 sm:py-2.5 text-xs sm:text-sm glass rounded-lg text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30"
-                        >
-                          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-                          {t.generatePrompt}
-                        </motion.button>
+                        <div className="mb-3 sm:mb-4">
+                          <label className="block text-[10px] sm:text-xs text-gray-400 font-semibold mb-1.5 sm:mb-2">
+                            {language === 'fr' ? 'Décrivez ce que vous voulez faire :' : 'Describe what you want to do:'}
+                          </label>
+                          <textarea
+                            value={userRequests[index] || ""}
+                            onChange={(e) => setUserRequests(prev => ({ ...prev, [index]: e.target.value }))}
+                            placeholder={language === 'fr' ? 'Ex: Je veux créer une image de...' : 'Ex: I want to create an image of...'}
+                            className="w-full glass rounded-lg p-2 sm:p-3 text-[11px] sm:text-sm text-white placeholder-gray-500 bg-white/5 border border-white/10 focus:border-purple-500/50 focus:outline-none resize-none mb-2"
+                            rows={2}
+                          />
+                          <motion.button
+                            onClick={() => handleGeneratePrompt(result, index)}
+                            disabled={!userRequests[index]?.trim()}
+                            whileHover={{ scale: userRequests[index]?.trim() ? 1.02 : 1 }}
+                            whileTap={{ scale: userRequests[index]?.trim() ? 0.98 : 1 }}
+                            className={`w-full px-3 py-2 sm:py-2.5 text-xs sm:text-sm rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
+                              userRequests[index]?.trim()
+                                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+                                : "bg-gray-500/20 text-gray-500 cursor-not-allowed"
+                            }`}
+                          >
+                            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                            {t.generatePrompt}
+                          </motion.button>
+                        </div>
                       )}
 
                       <motion.a
